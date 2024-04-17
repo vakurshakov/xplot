@@ -1,4 +1,7 @@
 import os
+import sys
+sys.path.append("../")
+
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
