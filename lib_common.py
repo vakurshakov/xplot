@@ -30,7 +30,7 @@ pressures = {
     "Paa": "Pyy"
 }
 
-sorts = [ "Ions", "Electrons" ]
+sorts = [ "Electrons", "Ions" ]
 
 # remap into c / w_pi units
 dx /= np.sqrt(mi_me)
@@ -50,10 +50,10 @@ def mkdir(dirname):
 mkdir(f"./{params_path}/Video")
 
 # Berendeev's data reading utilities
-def get_prefix(timestep):
+def get_prefix(timestep, restarts=restart_timesteps, prefixes=prefixes):
     i = 0
-    for restart_timestep in restart_timesteps:
-        if (timestep > restart_timestep):
+    for restart in restarts:
+        if (timestep > restart):
             i += 1
     return prefixes[i]
 
