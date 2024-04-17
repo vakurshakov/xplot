@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from lib_common import *
+from plot_fourier_common import *
 
 ncols=3
 nrows=1
@@ -8,40 +8,18 @@ nrows=1
 fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-res_dir = f"./{params_path}/Other"
+res_dir = f"{params_path}/Other"
 mkdir(res_dir)
 
 r_range = [2.25, 2.5, 2.75, 3.0] # reduce_array(np.arange(1.00, 3.76, 0.25), rank, proc)
-
-tmin = int(4 * tau / dts)
-tmax = int(9 * tau / dts)
-
-f_tmin = tmin * dts / tau
-f_tmax = tmax * dts / tau
-
-# the minimum of all min(m) is 56
-mmax = 50
-wmax = 0.03
-
-Omega_i = B0 / mi_me
 
 m0 = 3
 w0 = 0.68
 print(f"w: {w0:4f} [1/tau], {w0 / tau:4f} [omega_pe], {w0 / (Omega_i * tau):4f} [Omega_i]")
         
 names = {
-    "Ea":   ("E_{\\phi}",   1e-5),
-}
-
-arg_2d = {
-    "xlabel": "$\\phi,~{\\rm rad}$",
-    "xlim": (0.0, 2 * np.pi),
-    "xticks": np.linspace(0.0, 2 * np.pi, 5),
-    "xticklabels": ["$0$", "$\\pi / 2$", "$\\pi$", "$3 \\pi / 2$", "$2 \\pi$"],
-
-    "ylabel": "$t,~\\tau$",
-    "ylim": (f_tmin, f_tmax),
-    "yticks": np.linspace(f_tmin, f_tmax, 5),
+    "Er": ("E_r", 1e-5),
+    # "Ea": ("E_{\\phi}", 1e-5),
 }
 
 arg_1d = {
@@ -49,35 +27,35 @@ arg_1d = {
     "xticks": np.linspace(f_tmin, f_tmax, 5),
 }
 
-for name, (title, at_max) in names.items():
+for name, (title, max_at) in names.items():
     for r in r_range:
         # Original map
-        F_at = Field(f"./{params_path}/Data1D/{name}_phi_t_r={r:.2f}", subplot(fig, gs, 0, 0), None, unsigned_cmap, (0, at_max))
-        F_at.set_axes_args(title=f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2$", **arg_2d)
-        F_at.boundaries = (0.0, 2 * np.pi, f_tmin, f_tmax)
-
-        f_data = np.load(f"{F_at.path_to_file}.npy", allow_pickle=True)
-        f_data = f_data[tmin:tmax,:]
+        F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2$", r, 0)
+        f_data = F_at.data
         F_at.data = np.square(f_data)
 
+        F_at.cmap = unsigned_cmap
+        F_at.vmin_vmax = (0, max_at)
         F_at.draw(add_cbar=True)
         F_at.draw_info()
         
-        # Clearing and making filtered map
-        F_at_filtered = Field(None, subplot(fig, gs, 1, 0), None, unsigned_cmap, (0, 1e-7))
-        F_at_filtered.set_axes_args(title=f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2,~m = {m0:0d}$", **arg_2d)
-        F_at_filtered.boundaries = (0.0, 2 * np.pi, f_tmin, f_tmax)
 
-        F_mw_complex, w, k = fourier_transform(f_data)
-        F_mw_complex[:, np.where(np.abs(k - m0) > 0.5)] = 0.0
+        # Clearing and making filtered map
+        F_at_filtered = prepare_field_phit(subplot(fig, gs, 1, 0), name, f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2,~m = {m0:0d}$", r, 0)
+
+        F_mw_complex, w, m = fourier_transform(f_data)
+        F_mw_complex[:, np.where(np.abs(m) > m0)] = 0.0
         ff_data = inverse_fourier_transform(F_mw_complex)[0]
         F_at_filtered.data = np.square(ff_data)
 
+        F_at_filtered.cmap = unsigned_cmap
+        F_at_filtered.vmin_vmax = None # (0, max_at)
         F_at_filtered.draw(add_cbar=True)
         F_at_filtered.draw_info()
 
+
         # Energy within field component
-        Avg = Field(None, subplot(fig, gs, 2, 0), None, unsigned_cmap, (0, at_max))
+        Avg = Field(None, subplot(fig, gs, 2, 0), None, unsigned_cmap, (0, max_at))
         Avg.set_axes_args(
             title=f"$\\ln(\\langle |{title}(\\phi,\,t,\,r = {r:.2f})|^2 \\rangle)$",
             ylim=(-21, -11),
