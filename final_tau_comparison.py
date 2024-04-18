@@ -19,9 +19,12 @@ je_l = Field(None, subplot(fig, gs, 2, 2))
 ni_l.set_axes_args(
     title="${\\rm Ion~density},~n_i$",
     yticks=[0, 0.5, 1.0, 1.5],
-    **arg_1d
+    **arg_1d,
 )
-pb_l.set_axes_args(title="${\\rm Pressure~displacement},~1 - b^2$", **arg_1d)
+pb_l.set_axes_args(
+    title="${\\rm Pressure~displacement},~1 - b^2$",
+    **arg_1d,
+)
 je_l.set_axes_args(
     title="${\\rm Electric~current},~j_e$",
     xlabel="$(r - r_0) / \\rho_e$",
@@ -84,8 +87,8 @@ for ax, letter in zip([*fig.axes[:8], fig.axes[9]], "ghi" "ad" "be" "cf" ):
             
 hw = 32 # hw / 4
 x0 = 3.5
-je_l.axes_position.arrow(x0, -0.5, +hw/2, 0, head_width=0.01, head_length=5, length_includes_head=True, color="black", linewidth=2, zorder=100)
-je_l.axes_position.arrow(x0, -0.5, -hw/2, 0, head_width=0.01, head_length=5, length_includes_head=True, color="black", linewidth=2, zorder=100)
+je_l.axes_position.arrow(x0, -0.5, +hw/2, 0, **arg_arrow)
+je_l.axes_position.arrow(x0, -0.5, -hw/2, 0, **arg_arrow)
 je_l.axes_position.text(x0, -0.45, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
 
 fig.tight_layout()
