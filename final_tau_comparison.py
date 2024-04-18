@@ -40,7 +40,12 @@ hw = 0
 for i, t in enumerate(t_range[1:]):
     for j, sort in enumerate(sorts):
         current = Field(None, subplot(fig, gs, i, j), boundaries, signed_cmap, (-0.02, +0.02))
-        current.data = get_current_data(t, sort)
+
+        # We take currents from np_5000 because they are less noisy. It is also
+        # valid because we want to compare the result before the m=3 instability
+        prefix = get_prefix(t, p5000.restart_timesteps, p5000.prefixes)
+        current.data = get_current_data(t, sort, prefix)[1]  # J_phi
+
         current.set_axes_args(title=f"$J_\\phi^{sort[0].lower()}(x,\,y,\,t = {int(t * dts / tau):d}\,\\tau)$", **arg_2d)
         current.draw(add_cbar=(t == t_range[-1]))
         current.draw_info()
@@ -50,7 +55,9 @@ for i, t in enumerate(t_range[1:]):
 for t in t_range:
     ni = parse_file(get_particles_file("Ions", "DensPlaneAvgZ", t))
     b  = parse_file(get_fields_file(t), fields.index("Bz"))
-    je_a = get_current_data(t, "Electrons")
+
+    prefix = get_prefix(t, p5000.restart_timesteps, p5000.prefixes)
+    je_a = get_current_data(t, "Electrons", prefix)[1]  # J_phi
 
     ni_l.data = phi_averaged(ni, R_MAP)
     pb_l.data = phi_averaged(b, R_MAP)

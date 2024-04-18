@@ -50,14 +50,12 @@ arg_anno = {
 res_dir = f"../Final"
 mkdir(res_dir)
 
-# We take currents from np_5000 because they are less noisy. It is also
-# valid because we want to compare the result before the m=3 instability
 def get_current_data(t, sort, prefix):
     t_str = str(int(t)).zfill(4)
     filename = f"{prefix}/Particles/{sort}/Diag2D/CurrentPlaneAvgZ{t_str}"
     je_x = parse_file(filename, 0)
     je_y = parse_file(filename, 1)
-    return vx_vy_to_vr_va(je_x, je_y, COS, SIN)[1]
+    return vx_vy_to_vr_va(je_x, je_y, COS, SIN)
 
 def get_magnetic_field_data(t, prefix):
     t_str = str(int(t)).zfill(4)

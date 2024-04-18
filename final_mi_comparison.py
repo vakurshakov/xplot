@@ -70,7 +70,7 @@ for i, (t, params) in enumerate(zip([t0_mi_1, t0_mi_100], [pmi1, p2000])):
 
     prefix = get_prefix(t, params.restart_timesteps, params.prefixes)
     e_r.data, e_a.data = get_electric_fields_data(t, prefix)
-    j_a.data = get_current_data(t, "Electrons", prefix)
+    j_a.data = get_current_data(t, "Electrons", prefix)[1] # J_phi
 
     for diag in [e_r, e_a, j_a]:
         diag.draw(add_cbar=(diag == j_a))
@@ -107,7 +107,7 @@ for t0, params, label in zip([t0_mi_1, t0_mi_100], [pmi1, p2000], ["$\\rho_i = \
     prefix = get_prefix(t0, params.restart_timesteps, params.prefixes)
     b = get_magnetic_field_data(t0, prefix)
     e = get_electric_fields_data(t0, prefix)[0] # E_r
-    j = get_current_data(t0, "Electrons", prefix)
+    j = get_current_data(t0, "Electrons", prefix)[1] # J_phi
 
     b = phi_averaged(b, R_MAP)
     e = phi_averaged(e, R_MAP)
