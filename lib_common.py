@@ -57,13 +57,15 @@ def get_prefix(timestep, restarts=restart_timesteps, prefixes=prefixes):
             i += 1
     return prefixes[i]
 
-def get_particles_file(sort, diag_name, timestep):
+def get_particles_file(sort, diag_name, timestep, prefix=None):
+    p = get_prefix(timestep) if prefix == None else prefix
     t_str = str(int(timestep)).zfill(4)
-    return f"{get_prefix(timestep)}/Particles/{sort}/Diag2D/{diag_name}{t_str}"
+    return f"{p}/Particles/{sort}/Diag2D/{diag_name}{t_str}"
 
-def get_fields_file(timestep):
+def get_fields_file(timestep, prefix=None):
+    p = get_prefix(timestep) if prefix == None else prefix
     t_str = str(int(timestep)).zfill(4)
-    return f"{get_prefix(timestep)}/Fields/Diag2D/FieldAvgPlaneZ_{t_str}"
+    return f"{p}/Fields/Diag2D/FieldAvgPlaneZ_{t_str}"
 
 def parse_file(path, offset=0):
     file = open(path, "rb")
