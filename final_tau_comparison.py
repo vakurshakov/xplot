@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-from lib_common import *
-
-import np_5000.parameters as np5000
+from final_common import *
 
 ncols=3
 nrows=3
@@ -18,17 +16,6 @@ ni_l = Field(None, subplot(fig, gs, 0, 2))
 pb_l = Field(None, subplot(fig, gs, 1, 2))
 je_l = Field(None, subplot(fig, gs, 2, 2))
 
-bx = -60
-ex = +60
-by = bx
-ey = ex
-
-arg_1d = {
-    "xlabel": "$r,~c/\\omega_{pe}$",
-    "xlim": (0, 60),
-    "xticks": np.linspace(0, 60, 5),
-}
-
 ni_l.set_axes_args(
     title="${\\rm Ion~density},~n_i$",
     yticks=[0, 0.5, 1.0, 1.5],
@@ -43,35 +30,15 @@ je_l.set_axes_args(
     yticks=[-1, -0.75, -0.5, -0.25, 0],
 )
 
-res_dir = f"../Final"
-mkdir(res_dir)
-
 t_range = np.arange(1, 5) * int(tau / dts)
 
 hw = 0
-
-# We take currents from np_5000 because they are less noisy. It is also
-# valid because we want to compare the result before the m=3 instability
-def get_current_data(t, sort):
-    t_str = str(int(t)).zfill(4)
-    filename = f"{get_prefix(t, np5000.restart_timesteps, np5000.prefixes)}/Particles/{sort}/Diag2D/CurrentPlaneAvgZ{t_str}"
-    je_x = parse_file(filename, 0)
-    je_y = parse_file(filename, 1)
-    return vx_vy_to_vr_va(je_x, je_y, COS, SIN)[1]
 
 for i, t in enumerate(t_range[1:]):
     for j, sort in enumerate(sorts):
         current = Field(None, subplot(fig, gs, i, j), boundaries, signed_cmap, (-0.02, +0.02))
         current.data = get_current_data(t, sort)
-        current.set_axes_args(
-            title=f"$J_\\phi^{sort[0].lower()}(x,\,y,\,t = {int(t * dts / tau):d}\,\\tau)$",
-            xlabel="$x,~c/\\omega_{pe}$",
-            ylabel="$y,~c/\\omega_{pe}$",
-            xlim=(bx, ex),
-            ylim=(by, ey),
-            xticks=np.linspace(bx, ex, 5),
-            yticks=np.linspace(by, ey, 5),
-        )
+        current.set_axes_args(title=f"$J_\\phi^{sort[0].lower()}(x,\,y,\,t = {int(t * dts / tau):d}\,\\tau)$", **arg_2d)
         current.draw(add_cbar=(t == t_range[-1]))
         current.draw_info()
         current.axes_position.set_aspect(1)
