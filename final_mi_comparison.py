@@ -135,7 +135,7 @@ for t0, params, label in zip([t0_mi_1, t0_mi_100], [pmi1, p2000], ["$\\rho_i = \
 
 for diag in [b_l, p_l, j_l]:
     diag.draw_info()
-    diag.axes_position.grid()
+    diag.axes_position.grid(alpha=0.3)
 
 for ax, letter in zip([*fig.axes[:3], *fig.axes[4:7], *fig.axes[8:]], "abcdefghi"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.92, 0.06)

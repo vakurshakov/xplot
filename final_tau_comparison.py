@@ -84,7 +84,7 @@ for t in t_range:
     if t == t_range[0]:
         for diag in [ni_l, pb_l, je_l]:
             diag.draw_info()
-            diag.axes_position.grid()
+            diag.axes_position.grid(alpha=0.3)
 
     print(t, "[dts]", f"{t * dts / tau:.3f}", "[tau]")
 
