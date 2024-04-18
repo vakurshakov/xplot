@@ -10,6 +10,10 @@ nrows=3
 fig = plt.figure(figsize=(8 * ncols * 1.15, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
+set_big(42)
+set_smol(40)
+set_ssmol(36)
+
 ni_l = Field(None, subplot(fig, gs, 0, 2))
 pb_l = Field(None, subplot(fig, gs, 1, 2))
 je_l = Field(None, subplot(fig, gs, 2, 2))
@@ -115,10 +119,10 @@ hw = 32 # hw / 4
 x0 = 3.5
 je_l.axes_position.arrow(x0, -0.5, +hw/2, 0, head_width=0.01, head_length=5, length_includes_head=True, color="black", linewidth=2, zorder=100)
 je_l.axes_position.arrow(x0, -0.5, -hw/2, 0, head_width=0.01, head_length=5, length_includes_head=True, color="black", linewidth=2, zorder=100)
-je_l.axes_position.text(x0, -0.45, "$33\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
+je_l.axes_position.text(x0, -0.45, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
 
 fig.tight_layout()
 fig.tight_layout()
 
 pb_l.axes_position.legend(fontsize=ssmol, loc="upper right")
-fig.savefig(f"{res_dir}/figure1.png")
+fig.savefig(f"{res_dir}/figure1.pdf")
