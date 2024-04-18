@@ -35,6 +35,18 @@ arg_arrow = {
     "zorder": 100
 }
 
+arg_anno = {
+    "arrowprops": dict(
+        facecolor="black",
+        width=1,
+        headwidth=6
+    ),
+    "fontsize": ssmol,
+    "horizontalalignment": "left",
+    "bbox": bbox,
+}
+
+
 res_dir = f"../Final"
 mkdir(res_dir)
 

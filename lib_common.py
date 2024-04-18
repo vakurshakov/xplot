@@ -18,8 +18,8 @@ proc = comm.Get_size()
 from lib_plot import *
 from lib_xy_rphi import *
 
-# from np_2000.parameters import * 
-from np_5000.parameters import * 
+from np_2000.parameters import * 
+# from np_5000.parameters import * 
 
 # Data layout in fields files
 fields = [ "Ex", "Ey", "Ez", "Bx", "By", "Bz" ]
@@ -33,9 +33,9 @@ pressures = {
 sorts = [ "Electrons", "Ions" ]
 
 # remap into c / w_pi units
-dx /= np.sqrt(mi_me)
-dy /= np.sqrt(mi_me)
-dz /= np.sqrt(mi_me)
+# dx /= np.sqrt(mi_me)
+# dy /= np.sqrt(mi_me)
+# dz /= np.sqrt(mi_me)
 buff = 10
 
 boundaries = (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy)
@@ -102,16 +102,16 @@ def subplot(fig, gs, x, y):
 
 bbox = dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.25')
 
-def annotate_x(axis, annotation, x=0.5, y=1):
+def annotate_x(axis, annotation, x=0.5, y=1, size=big, ha="center"):
     axis.annotate(
         annotation,
         xy=(x, y),
         xytext=(0, 1),
         xycoords="axes fraction",
         textcoords="offset points",
-        ha="center",
+        ha=ha,
         va="baseline",
-        size=big,
+        size=size,
         bbox=bbox
     )
 
@@ -180,4 +180,3 @@ def inverse_fourier_transform(f_data):
     i_data = np.imag(data)
 
     return r_data, i_data
-        
