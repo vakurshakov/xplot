@@ -33,8 +33,8 @@ for i, t in enumerate(t_range):
         diag.axes_position.set_aspect(1)
         diag.axes_position.grid(alpha=0.3)
 
-    # annotate_x(prr.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.06, 0.9, smol, "left")
     annotate_x(prr.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
+    annotate_x(j_r.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
 
 # beta calculation
 t_range = np.array([1, 2, 4, 6]) * int(tau / dts)  # dts
