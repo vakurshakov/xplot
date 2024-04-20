@@ -11,7 +11,7 @@ gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=
 res_dir = f"{params_path}/Spectras"
 mkdir(res_dir)
 
-for name, (title, max_at, max_mw) in name.items():
+for name, (title, max_at, max_mw) in names.items():
     for r in r_range:
         F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"${title}(\\phi,\,t,\,r = {r:.2f})$", r, max_at)
         F_at.draw(add_cbar=True)
@@ -25,7 +25,7 @@ for name, (title, max_at, max_mw) in name.items():
         F_mw.draw_info()
 
         draw_common_lines_mw(F_mw.axes_position)
-        
+
         fig.tight_layout()
 
         filename = f"{res_dir}/{name}_r={r:.2f}"

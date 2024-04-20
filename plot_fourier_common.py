@@ -2,7 +2,7 @@
 
 from lib_common import *
 
-name = {
+names = {
     "Bz":   ("\\delta B_z", 0.02,  150),
     "Er":   ("E_r",         0.02,  80),
     "Ea":   ("E_{\\phi}",   0.02,  80),
@@ -54,7 +54,6 @@ print(f"w: {w0:4f} [1/tau], {w0 / tau:4f} [omega_pe], {w0 / (Omega_i * tau):4f} 
 def draw_common_lines_mw(ax):
     ax.plot([-m0, -m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=0.5)
     ax.plot([+m0, +m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=0.5)
-    
 
     for m in range(1, 5):
         ax.plot([-mmax, +mmax], [+m * Omega_i, +m * Omega_i], linestyle="--", color="r", linewidth=0.5)
@@ -62,7 +61,7 @@ def draw_common_lines_mw(ax):
     ax.plot([-mmax, +mmax], [+Omega_e, +Omega_e], linestyle="--", color="r", linewidth=0.5)
     ax.plot([-mmax, +mmax], [+0.0, +0.0], linestyle="--", color="r", linewidth=0.5)
 
-    # drift 
+    # drift
     ms = np.linspace(-mmax, +mmax, 100)
 
     # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
@@ -94,4 +93,3 @@ def prepare_field_mw(ax, title, r, max_mw, data):
     # the minimum of all min(m) is 56
     F_mw.boundaries = (min(m), max(m), min(w), max(w))
     return F_mw, w, m
-        

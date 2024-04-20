@@ -26,7 +26,7 @@ def kw_lines(ax):
     ax.plot([-mmax, +mmax], [w0 / tau, w0 / tau], linestyle="-", color="r", linewidth=0.5)
 
 
-for name, (title, max_at, max_mw) in name.items():
+for name, (title, max_at, max_mw) in names.items():
     for r in r_range:
         F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"${title}(\\phi,\,t,\,r = {r:.2f})$", r, max_at)
         F_at.draw(add_cbar=True)
@@ -47,7 +47,7 @@ for name, (title, max_at, max_mw) in name.items():
         F_at_filtered.data = inverse_fourier_transform(F_mw_complex)[0]
         F_at_filtered.draw(add_cbar=True)
         F_at_filtered.draw_info()
-        
+
         kw_lines(F_mw.axes_position)
         at_lines(F_at_filtered.axes_position)
 
