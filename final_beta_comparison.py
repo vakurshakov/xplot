@@ -5,7 +5,7 @@ from final_common import *
 import scipy.integrate as I
 
 ncols=4
-nrows=3
+nrows=4
 
 fig = plt.figure(figsize=(8 * ncols * 1.18, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
@@ -21,20 +21,25 @@ for i, t in enumerate(t_range):
     prr.set_axes_args(title="$\\Pi_{rr}^i(x,\,y)$", **arg_2d)
     prr.data = parse_file(get_particles_file("Ions", f"{pressures['Prr']}PlaneAvgZ", t))
 
-    vmax = 0.002
-    j_r = Field(None, subplot(fig, gs, i, 1), boundaries, signed_cmap, (-vmax, +vmax))
+    vjir = 0.002
+    vjsa = 0.02
+
+    j_r = Field(None, subplot(fig, gs, i, 1), boundaries, signed_cmap, (-vjir, +vjir))
+    j_a = Field(None, subplot(fig, gs, i, 2), boundaries, signed_cmap, (-vjsa, +vjsa))
+
     j_r.set_axes_args(title="$J_r^i(x,\,y)$", **arg_2d)
+    j_a.set_axes_args(title="$J_{\\phi}(x,\,y)$", **arg_2d) # total current!
+
     prefix = get_prefix(t, p2000.restart_timesteps, p2000.prefixes)
     j_r.data = get_current_data(t, "Ions", prefix)[0]
+    j_a.data = get_current_data(t, "Electrons", prefix)[1] + get_current_data(t, "Ions", prefix)[1]
 
-    for diag in [prr, j_r]:
+    for diag in [prr, j_r, j_a]:
         diag.draw(add_cbar=(t == t_range[-1]))
         diag.draw_info()
         diag.axes_position.set_aspect(1)
         diag.axes_position.grid(alpha=0.3)
-
-    annotate_x(prr.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
-    annotate_x(j_r.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
+        annotate_x(diag.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
 
 # beta calculation
 t_range = np.array([1, 2, 4, 6]) * int(tau / dts)  # dts
@@ -58,7 +63,7 @@ for i, t in enumerate(t_range):
     pd = -(pd - pd[-1])
     ps = pr - pd
 
-    beta = Field(None, subplot(fig, gs, i, 2), boundaries, signed_cmap, None)
+    beta = Field(None, subplot(fig, gs, i, 3), boundaries, signed_cmap, None)
     beta.set_axes_args(
         title="${\\rm Plasma~beta}$",
         ylim=(-0.1, +1.25),
