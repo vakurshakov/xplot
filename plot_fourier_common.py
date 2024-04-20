@@ -44,9 +44,12 @@ args_mw = {
 }
 
 m0 = 3
+w0 = 0.68
 Omega_i = B0 / mi_me
 Omega_e = B0
 omega0_pi = 1 / np.sqrt(mi_me)
+
+print(f"w: {w0:4f} [1/tau], {w0 / tau:4f} [omega_pe], {w0 / (Omega_i * tau):4f} [Omega_i]")
 
 def draw_common_lines_mw(ax):
     ax.plot([-m0, -m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=0.5)

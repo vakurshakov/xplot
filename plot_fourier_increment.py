@@ -13,10 +13,6 @@ mkdir(res_dir)
 
 r_range = [2.25, 2.5, 2.75, 3.0] # reduce_array(np.arange(1.00, 3.76, 0.25), rank, proc)
 
-m0 = 3
-w0 = 0.68
-print(f"w: {w0:4f} [1/tau], {w0 / tau:4f} [omega_pe], {w0 / (Omega_i * tau):4f} [Omega_i]")
-        
 names = {
     "Er": ("E_r", 1e-5),
     # "Ea": ("E_{\\phi}", 1e-5),
