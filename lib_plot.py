@@ -294,7 +294,7 @@ class Field:
             elif name == "xlabel":
                 ax.set_xlabel(arg, fontsize=smol, labelpad=12)
             elif name == "ylabel":
-                ax.set_ylabel(arg, fontsize=smol, labelpad=4)
+                ax.set_ylabel(arg, fontsize=smol, labelpad=10)
             elif name == "zlabel":
                 ax.set_zlabel(arg, fontsize=smol, labelpad=16)
             elif name == "xticks":

@@ -14,16 +14,16 @@ names = {
 
 r_range = reduce_array(np.arange(1.00, 3.76, 0.25), rank, proc)
 
-tmin_data = int(3.245 * tau / dts)
-tmin = int(3.5 * tau / dts) 
-tmax = int(6.0 * tau / dts)
+tmin_data = int(0 * tau / dts)
+tmin = int(3 * tau / dts)
+tmax = int(9 * tau / dts)
 
 f_tmin = tmin * dts / tau
 f_tmax = tmax * dts / tau
 args_phit = {
     "ylabel": "$t,~\\tau$",
     "ylim": (f_tmin, f_tmax),
-    "yticks": np.linspace(f_tmin, f_tmax, 6),
+    "yticks": np.linspace(f_tmin, f_tmax, 7),
 
     "xlabel": "$\\phi,~{\\rm rad}$",
     "xlim": (0.0, 2 * np.pi),
@@ -32,7 +32,7 @@ args_phit = {
 }
 
 mmax = 50
-wmax = 0.03
+wmax = 0.02
 args_mw = {
     "ylabel": "$\\omega,~\\omega_{pe}$",
     "ylim": (-wmax, +wmax),
