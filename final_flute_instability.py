@@ -95,25 +95,53 @@ Avg.axes_position.plot(ts, ff_avg)
 
 Avg.draw_info()
 
-#
+# filtered fourier lines
 ax = F_at_filtered.axes_position
 phi = np.linspace(0, 2 * np.pi)
 const = -9.2
 ax.plot(phi, (- m0 * phi - const) / w0, linestyle='--', c='r', linewidth=2)
 ax.text(np.pi - 0.3, 3.5, f"$\\omega \\approx {w0 / (Omega_i * tau):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
 
-#
+# fourier lines
 ax = F_mw.axes_position
 ax.plot([-m0, -m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=1)
 ax.plot([+m0, +m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=1)
 
-#
+# increment lines
 ax = Avg.axes_position
 y0 = -20.2
 x0 = f_tmin
 gamma = 0.6
 ax.plot(ts, -19.9 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
 ax.text(5.0, -14, f"$\\Gamma \\approx {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+
+# modified Simon-Hoh instability lines
+'''
+t0 = int(4 * tau / dts)
+tw = int(0.5 * tau / dts)
+tmin_avg = t0 - tw
+tmax_avg = t0 + tw
+
+e_r = np.load(f"{params_path}/Data1D/Er_phi_t_r={r0:.2f}.npy", allow_pickle=True)
+b_z = np.load(f"{params_path}/Data1D/Bz_phi_t_r={r0:.2f}.npy", allow_pickle=True)
+
+n_i = parse_file(get_particles_file("Ions", f"DensPlaneAvgZ", t))
+n_i = phi_averaged(n_i, R_MAP)
+
+nr0 = int(r0 * np.sqrt(mi_me) / dx)
+n0_i = n_i[nr0]
+dn_i = np.gradient(n_i, dx)[nr0]
+
+e_r = np.mean(e_r[tmin_avg:tmax_avg,:])
+b_z = np.mean(b_z[tmin_avg:tmax_avg,:])
+
+omega_E = -(m0 / r0) * e_r / b_z
+omega_s = -(m0 / r0) * (T_e / b_z) * (dn_i / n0_i)
+gamma_sh = np.sqrt(T_e / mi_me) * (m0 / r0) * np.sqrt(omega_E / omega_s)
+ax.plot(ts, -19.9 + 2 * gamma_sh * ts * tau, linestyle='--', c='r', linewidth=2)
+
+print("Er:", e_r, "Bz:", b_z, "n0:", n0_i, "dn0:", dn_i, "gamma_sh:", gamma_sh)
+'''
 
 for ax, letter in zip([*fig.axes[:2], fig.axes[2], fig.axes[4], fig.axes[3], fig.axes[-1]], "de" "abc" "f"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.09, 0.06)
