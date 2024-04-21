@@ -14,7 +14,7 @@ set_ssmol(36)
 
 ni_l = Field(None, subplot(fig, gs, 0, 2))
 pb_l = Field(None, subplot(fig, gs, 1, 2))
-je_l = Field(None, subplot(fig, gs, 2, 2))
+js_l = Field(None, subplot(fig, gs, 2, 2))
 
 ni_l.set_axes_args(
     title="${\\rm Ion~density},~n_i$",
@@ -25,8 +25,8 @@ pb_l.set_axes_args(
     title="${\\rm Pressure~displacement},~1 - b^2$",
     **arg_1d,
 )
-je_l.set_axes_args(
-    title="${\\rm Electric~current},~j_e$",
+js_l.set_axes_args(
+    title="${\\rm Electric~current},~j$",
     xlabel="$(r - r_0) / \\rho_e$",
     xlim=(-70, 120),
     xticks=[0, -30, +30, -60, +60, +90, 120],
@@ -57,11 +57,12 @@ for t in t_range:
     b  = parse_file(get_fields_file(t), fields.index("Bz"))
 
     prefix = get_prefix(t, p5000.restart_timesteps, p5000.prefixes)
-    je_a = get_current_data(t, "Electrons", prefix)[1]  # J_phi
+    j_a  = get_current_data(t, "Electrons", prefix)[1]  # J_phi
+    j_a += get_current_data(t, "Ions", prefix)[1]  # J_phi
 
     ni_l.data = phi_averaged(ni, R_MAP)
     pb_l.data = phi_averaged(b, R_MAP)
-    je_l.data = phi_averaged(je_a, R_MAP)
+    js_l.data = phi_averaged(j_a, R_MAP)
 
     pb_l.data = 1 - np.square(pb_l.data / B0)
 
@@ -70,33 +71,32 @@ for t in t_range:
 
     ni_l.axes_position.plot(rs, ni_l.data, linewidth=lw)
     pb_l.axes_position.plot(rs, pb_l.data, linewidth=lw, label=f"$t = {int(t / tau * dts):d}\,\\tau$")
-    
-    je_min = np.min(je_l.data)
-    r0 = np.argmin(je_l.data)
-    je_l.data /= np.abs(je_min)
-    rho_e = np.sqrt(T_e) / B0
-    rs = (np.arange(0, je_l.data.shape[0]) - r0) * dx / rho_e
-    je_l.axes_position.plot(rs, je_l.data, linewidth=lw)
 
-    hw_i = np.argwhere(np.abs(je_l.data + 0.5) < 0.1)
+    je_min = np.min(js_l.data)
+    r0 = np.argmin(js_l.data)
+    js_l.data /= np.abs(je_min)
+    rho_e = np.sqrt(T_e) / B0
+    rs = (np.arange(0, js_l.data.shape[0]) - r0) * dx / rho_e
+    js_l.axes_position.plot(rs, js_l.data, linewidth=lw)
+
+    hw_i = np.argwhere(np.abs(js_l.data + 0.5) < 0.1)
     hw += (np.mean(hw_i[np.where(hw_i > r0)]) - np.mean(hw_i[np.where(hw_i < r0)])) * dx / rho_e
 
     if t == t_range[0]:
-        for diag in [ni_l, pb_l, je_l]:
+        for diag in [ni_l, pb_l, js_l]:
             diag.draw_info()
             diag.axes_position.grid(alpha=0.3)
 
     print(t, "[dts]", f"{t * dts / tau:.3f}", "[tau]")
 
 for ax, letter in zip([*fig.axes[:8], fig.axes[9]], "ghi" "ad" "be" "cf" ):
-    # annotate_x(ax, "${\\rm " + letter + "}$", 0, 1.06)
     annotate_x(ax, "${\\rm " + letter + "}$", 0.07, 0.07)
-            
+
 hw = 32 # hw / 4
 x0 = 3.5
-je_l.axes_position.arrow(x0, -0.5, +hw/2, 0, **arg_arrow)
-je_l.axes_position.arrow(x0, -0.5, -hw/2, 0, **arg_arrow)
-je_l.axes_position.text(x0, -0.45, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
+js_l.axes_position.arrow(x0, -0.5, +hw/2, 0, **arg_arrow)
+js_l.axes_position.arrow(x0, -0.5, -hw/2, 0, **arg_arrow)
+js_l.axes_position.text(x0, -0.45, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
 
 fig.tight_layout()
 fig.tight_layout()

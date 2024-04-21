@@ -18,7 +18,7 @@ def draw_current_lines():
     ax = j_l.axes_position
 
     rho_i = np.sqrt(mi_me * T_i / T_e) # hw / 4
-    x0 = 2.5
+    x0 = 0
     y0 = -0.5
     text_offset = 0.05
     ax.arrow(x0, y0, +rho_i/2, 0, **arg_arrow)
@@ -35,11 +35,11 @@ def draw_current_lines():
     ax.fill_between(rc[xlim[0]:xlim[1]], np.zeros_like(j)[xlim[0]:xlim[1]], j[xlim[0]:xlim[1]], color="grey", alpha=0.2, zorder=-1)
     ax.annotate(
         "${\\rm drift~instability~effect}$",
-        (36, -0.26),
+        (36, -0.25),
         (46, -0.5),
         **arg_anno,
     )
-    
+
 
 def draw_magnetic_lines():
     ax = b_l.axes_position
@@ -93,7 +93,7 @@ p_l.set_axes_args(
     xlim=(0, 100),
 )
 j_l.set_axes_args(
-    title="${\\rm Electric~current},~j_e$",
+    title="${\\rm Electric~current},~j$",
     xlabel="$(r - r_0) / \\rho_e$",
     xlim=(-60, 120),
     xticks=[0, -30, +30, -60, +60, +90, 120],
@@ -107,7 +107,7 @@ for t0, params, label in zip([t0_mi_1, t0_mi_100], [pmi1, p2000], ["$\\rho_i = \
     prefix = get_prefix(t0, params.restart_timesteps, params.prefixes)
     b = get_magnetic_field_data(t0, prefix)
     e = get_electric_fields_data(t0, prefix)[0] # E_r
-    j = get_current_data(t0, "Electrons", prefix)[1] # J_phi
+    j =  get_current_data(t0, "Electrons", prefix)[1] + get_current_data(t0, "Ions", prefix)[1] # J_phi, total!
 
     b = phi_averaged(b, R_MAP)
     e = phi_averaged(e, R_MAP)
@@ -139,7 +139,7 @@ for diag in [b_l, p_l, j_l]:
 
 for ax, letter in zip([*fig.axes[:3], *fig.axes[4:7], *fig.axes[8:]], "abcdefghi"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.92, 0.06)
-            
+
 for ax, text in zip([fig.axes[0], fig.axes[4]], ["$m_i = 1,~\\rho_i = \\rho_e$", "$m_i = 100,~\\rho_i \\approx 32 \\rho_e$"]):
     annotate_x(ax, text, 0.06, 0.9, ssmol, "left")
 
