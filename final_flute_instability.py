@@ -9,7 +9,7 @@ ncols=3
 nrows=2
 
 fig = plt.figure(figsize=(8 * ncols * 1, 8 * nrows * 1.2))
-gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1, 0.9], figure=fig)
+gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1, 0.8], figure=fig)
 
 set_big(42)
 set_smol(40)
@@ -49,7 +49,7 @@ for t in t_range:
 
 j_i.axes_position.legend(loc="lower right", fontsize=ssmol)
 
-r0 = 2.5 # c / w_pe
+r0 = 2.5 # c / w_pi
 name = "Ea"
 title = names[name][0]
 
@@ -135,9 +135,9 @@ dn_i = np.gradient(n_i, dx)[nr0]
 e_r = np.mean(e_r[tmin_avg:tmax_avg,:])
 b_z = np.mean(b_z[tmin_avg:tmax_avg,:])
 
-omega_E = -(m0 / r0) * e_r / b_z
-omega_s = -(m0 / r0) * (T_e / b_z) * (dn_i / n0_i)
-gamma_sh = np.sqrt(T_e / mi_me) * (m0 / r0) * np.sqrt(omega_E / omega_s)
+omega_E = -(m0 / (r0 * np.sqrt(mi_me))) * e_r / b_z
+omega_s = -(m0 / (r0 * np.sqrt(mi_me))) * (T_e / b_z) * (dn_i / n0_i)
+gamma_sh = np.sqrt(T_e / mi_me) * (m0 / (r0 * np.sqrt(mi_me))) * np.sqrt(omega_E / omega_s)
 ax.plot(ts, -19.9 + 2 * gamma_sh * ts * tau, linestyle='--', c='r', linewidth=2)
 
 print("Er:", e_r, "Bz:", b_z, "n0:", n0_i, "dn0:", dn_i, "gamma_sh:", gamma_sh)

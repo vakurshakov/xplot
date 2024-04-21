@@ -18,8 +18,8 @@ proc = comm.Get_size()
 from lib_plot import *
 from lib_xy_rphi import *
 
-from np_2000.parameters import * 
-# from np_5000.parameters import * 
+from np_2000.parameters import *
+# from np_5000.parameters import *
 
 # Data layout in fields files
 fields = [ "Ex", "Ey", "Ez", "Bx", "By", "Bz" ]
