@@ -10,9 +10,9 @@ nrows=4
 fig = plt.figure(figsize=(8 * ncols * 1.18, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-set_big(42)
-set_smol(40)
-set_ssmol(36)
+set_big(60)
+set_smol(55)
+set_ssmol(45)
 
 t_range = np.array([1, 4, 6, 9]) * int(tau / dts)  # dts
 
