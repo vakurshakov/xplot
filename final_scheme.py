@@ -13,7 +13,12 @@ res_dir = f"../Final"
 mkdir(res_dir)
 
 plot = Field(None, subplot(fig, gs, 0, 0), boundaries)
-plot.set_axes_args(title="{\\rm Scheme}", **arg_2d)
+plot.set_axes_args(
+  title="{\\rm Scheme}", 
+  xticklabels=[],
+  yticklabels=[],
+  **arg_2d,
+)
 
 ax = plot.axes_position
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
@@ -74,9 +79,6 @@ ax.scatter(xc, yc, s=80, c='r')
 plot_circle(ax, 4, xc+0.2, yc-0.1, linestyle='-', c='r')
 
 # parameters and other
-ax.xaxis.set_minor_locator(MultipleLocator(15))
-ax.yaxis.set_minor_locator(MultipleLocator(15))
-
 x0 = 1.3
 annotate_x(
   ax,
@@ -108,6 +110,8 @@ ax.annotate("$R = 120$", (rd * np.cos(np.pi / 4) - 1, rd * np.sin(np.pi / 4) - 1
 
 ax.set_aspect(1)
 ax.grid(alpha=0.5, zorder=0)
+ax.xaxis.set_minor_locator(MultipleLocator(15))
+ax.yaxis.set_minor_locator(MultipleLocator(15))
 
 plot.draw_info()
 
