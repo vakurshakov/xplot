@@ -6,7 +6,7 @@ from final_resonance import *
 ncols=3
 nrows=2
 
-fig = plt.figure(figsize=(8 * ncols * 1.01, 8 * nrows * 1.2))
+fig = plt.figure(figsize=(8 * ncols * 1, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
 set_big(42)
@@ -39,13 +39,13 @@ for t in t_range:
 
     for diag in [j_e, j_i]:
         ax = diag.axes_position
-        ax.plot(r_range, diag.data, label=f"$t = {t * dts / tau:.0f}\,\\tau$")
+        ax.plot(r_range, diag.data, label=f"$t = {t * dts / tau:.0f}\,\\tau$", linewidth=2)
 
         if t == t_range[-1]:
             diag.draw_info()
             ax.grid(alpha=0.3)
 
-j_i.axes_position.legend(loc="lower right", fontsize=ssmol * 0.9)
+j_e.axes_position.legend(bbox_to_anchor=(1.15, 0.58), fontsize=ssmol * 0.9, framealpha=1)
 
 # resonances
 Res = get_resonances(subplot(fig, gs, 2, 1), t_range)
