@@ -35,8 +35,8 @@ def draw_current_lines():
     ax.fill_between(rc[xlim[0]:xlim[1]], np.zeros_like(j)[xlim[0]:xlim[1]], j[xlim[0]:xlim[1]], color="grey", alpha=0.2, zorder=-1)
     ax.annotate(
         "${\\rm drift~instability~effect}$",
-        (36, -0.25),
-        (46, -0.5),
+        (72, -0.085),
+        (46, -0.320),
         **arg_anno,
     )
 
@@ -48,8 +48,8 @@ def draw_magnetic_lines():
     ax.fill_betweenx(ylim, [0, 0], [15, 15], color="grey", alpha=0.2, zorder=-1)
     ax.annotate(
         "${\\rm injection~region}$",
-        (15, 0.1),
-        (30, 0.12),
+        (16, 0.1),
+        (30, 0.14),
         **arg_anno,
     )
     ax.set_ylim(ylim)
@@ -93,7 +93,7 @@ p_l.set_axes_args(
     xlim=(0, 100),
 )
 j_l.set_axes_args(
-    title="${\\rm Electric~current},~j$",
+    title="${\\rm Electric~current},~J_{\\phi}$",
     xlabel="$(r - r_0) / \\rho_e$",
     xlim=(-60, 120),
     xticks=[0, -30, +30, -60, +60, +90, 120],
@@ -129,9 +129,9 @@ for t0, params, label in zip([t0_mi_1, t0_mi_100], [pmi1, p2000], ["$\\rho_i = \
         jp2000 = j
 
     lw = 3
-    b_l.axes_position.plot(rs, b, linewidth=lw) # label=f"$t = {int(t0 / tau * dts):d}\,\\tau$")
+    b_l.axes_position.plot(rs, b, linewidth=lw, label=label)
     p_l.axes_position.plot(rs, p, linewidth=lw, label=label)
-    j_l.axes_position.plot(rc, j, linewidth=lw)
+    j_l.axes_position.plot(rc, j, linewidth=lw, label=label)
 
 for diag in [b_l, p_l, j_l]:
     diag.draw_info()
@@ -146,7 +146,9 @@ for ax, text in zip([fig.axes[0], fig.axes[4]], ["$m_i = 1,~\\rho_i = \\rho_e$",
 draw_current_lines()
 draw_magnetic_lines()
 
-p_l.axes_position.legend(loc="upper left", fontsize=ssmol)
+b_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
+p_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
+j_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
 
 fig.tight_layout()
 fig.tight_layout()

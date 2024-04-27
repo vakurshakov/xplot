@@ -80,8 +80,7 @@ for i, t in enumerate(t_range):
     ax.grid(alpha=0.3)
     beta.draw_info()
 
-    if (t == t_range[0]):
-        ax.legend(loc="center right", fontsize=smol)
+    ax.legend(bbox_to_anchor=(0.5, 0.30), fontsize=ssmol)
 
     annotate_x(ax, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
 

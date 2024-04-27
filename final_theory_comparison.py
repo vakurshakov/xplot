@@ -72,15 +72,15 @@ T_t.axes_position.plot(ts, T_th, label="${\\rm theory}$", linewidth=lw)
 
 for diag in [b_t, n_t, T_t]:
     ax = diag.axes_position
-
-    if (diag == n_t):
-        ax.legend(loc="lower right", fontsize=ssmol)
-
     ax.grid(alpha=0.3)
     diag.draw_info()
 
 for ax, letter in zip(fig.axes, "abc"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.08, 0.88)
+
+b_t.axes_position.legend(loc="upper right", fontsize=ssmol * 1.1)
+T_t.axes_position.legend(loc="upper right", fontsize=ssmol * 1.1)
+n_t.axes_position.legend(loc="lower right", fontsize=ssmol * 1.1)
 
 fig.tight_layout()
 fig.tight_layout()

@@ -22,11 +22,11 @@ ni_l.set_axes_args(
     **arg_1d,
 )
 pb_l.set_axes_args(
-    title="${\\rm Pressure~displacement},~1 - b^2$",
+    title="${\\rm Pressure},~1 - b^2$",
     **arg_1d,
 )
 js_l.set_axes_args(
-    title="${\\rm Electric~current},~j$",
+    title="${\\rm Electric~current},~J_{\\phi}$",
     xlabel="$(r - r_0) / \\rho_e$",
     xlim=(-70, 120),
     xticks=[0, -30, +30, -60, +60, +90, 120],
@@ -69,7 +69,7 @@ for t in t_range:
     rs = np.arange(0, data_shape[0] // 2) * dx
     lw = (3 if t == t_range[-1] else 1.5)
 
-    ni_l.axes_position.plot(rs, ni_l.data, linewidth=lw)
+    ni_l.axes_position.plot(rs, ni_l.data, linewidth=lw, label=f"$t = {int(t / tau * dts):d}\,\\tau$")
     pb_l.axes_position.plot(rs, pb_l.data, linewidth=lw, label=f"$t = {int(t / tau * dts):d}\,\\tau$")
 
     je_min = np.min(js_l.data)
@@ -77,7 +77,7 @@ for t in t_range:
     js_l.data /= np.abs(je_min)
     rho_e = np.sqrt(T_e) / B0
     rs = (np.arange(0, js_l.data.shape[0]) - r0) * dx / rho_e
-    js_l.axes_position.plot(rs, js_l.data, linewidth=lw)
+    js_l.axes_position.plot(rs, js_l.data, linewidth=lw, label=f"$t = {int(t / tau * dts):d}\,\\tau$")
 
     hw_i = np.argwhere(np.abs(js_l.data + 0.5) < 0.1)
     hw += (np.mean(hw_i[np.where(hw_i > r0)]) - np.mean(hw_i[np.where(hw_i < r0)])) * dx / rho_e
@@ -101,5 +101,8 @@ js_l.axes_position.text(x0, -0.45, "$32\,\\rho_e$", horizontalalignment="center"
 fig.tight_layout()
 fig.tight_layout()
 
+ni_l.axes_position.legend(fontsize=ssmol, loc="upper right")
 pb_l.axes_position.legend(fontsize=ssmol, loc="upper right")
+js_l.axes_position.legend(fontsize=ssmol, loc="lower right")
+
 fig.savefig(f"{res_dir}/figure1.pdf")

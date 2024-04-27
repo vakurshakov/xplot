@@ -6,7 +6,7 @@ from final_resonance import *
 ncols=3
 nrows=2
 
-fig = plt.figure(figsize=(8 * ncols * 1, 8 * nrows * 1.1))
+fig = plt.figure(figsize=(8 * ncols * 1, 8 * nrows * 1.2))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
 set_big(42)
@@ -45,7 +45,8 @@ for t in t_range:
             diag.draw_info()
             ax.grid(alpha=0.3)
 
-j_e.axes_position.legend(bbox_to_anchor=(1.15, 0.58), fontsize=ssmol * 0.9, framealpha=1)
+# j_i.axes_position.legend(bbox_to_anchor=(0.56, 0.56), fontsize=ssmol * 0.9, framealpha=1)
+j_i.axes_position.legend(loc="lower right", fontsize=ssmol * 0.9, framealpha=1)
 
 # resonances
 Res = get_resonances(subplot(fig, gs, 2, 1), t_range)
@@ -73,7 +74,7 @@ for diag in [F_at, F_at_filtered]:
 # increment
 Avg = Field(None, subplot(fig, gs, 2, 0))
 Avg.set_axes_args(
-    title="${\\rm Increment~of~} m = 3 {\\rm ~mode}$",
+    title="${\\rm Amplitude~of~} m = 3 {\\rm ~mode}$",
 
     xlabel="$t, \\tau$",
     xlim=(f_tmin, f_tmax),
@@ -96,7 +97,7 @@ ax = F_at_filtered.axes_position
 phi = np.linspace(0, 2 * np.pi)
 const = -9.2
 ax.plot(phi, (- m0 * phi - const) / w0, linestyle='--', c='r', linewidth=2)
-ax.text(np.pi - 0.3, 3.5, f"$\\omega \\approx {w0 / (Omega_i * tau):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+ax.text(np.pi - 0.3, 3.5, f"$\\omega \\approx {w0 / (Omega_i * tau):.2f}\,\\Omega_v^i$", fontsize=smol, bbox=bbox)
 
 # increment lines
 ax = Avg.axes_position
@@ -104,7 +105,7 @@ y0 = -20.2
 x0 = f_tmin
 gamma = 0.6
 ax.plot(ts, -19.9 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
-ax.text(5.0, -14, f"$\\Gamma \\approx {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+ax.text(4.8, -14, f"$\\Gamma \\approx {(gamma / (Omega_i * tau)):.2f}\,\\Omega_v^i$", fontsize=smol, bbox=bbox)
 
 for ax, letter in zip([*fig.axes[:2], fig.axes[2], fig.axes[4], fig.axes[3], fig.axes[-1]], "de" "fba" "c"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.09, 0.9)
