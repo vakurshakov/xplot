@@ -218,13 +218,15 @@ def generate_info(diag, plane, title):
         yticks=np.linspace(by, ey, 5),
     )
 
-def timestep_should_be_processed(t, filename):
+def timestep_should_be_processed(t, filename, skip_processed=True):
+    msg = f"{filename} {t} [dts] {t * dts / tau:.3f} [tau]"
     if not is_correct_timestep(t):
-        print(f"Timestep {t} [dts], {t * dts / tau} is incorrect, it would be skipped.")
+        print(msg, "Data is incorrect, skipping")
         return False
-    if os.path.exists(filename):
-        print(f"Timestep {t} [dts], {t * dts / tau} was already processed, it would be skipped.")
+    if skip_processed and os.path.exists(filename):
+        print(msg, "Timestep was already processed, skipping")
         return False
+    print("Processing", msg)
     return True
 
 def get_parsed_field(field, name, plane, comp, t):

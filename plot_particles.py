@@ -25,8 +25,6 @@ def plot_particles3(s, t):
     annotate_x(jrs[0].axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
 
     fig.tight_layout()
-
-    print(filename, t, "[dts]", f"{t * dts / tau:.3f}", "[tau]")
     fig.savefig(filename)
 
     for diag in jrs + jas + ns:
