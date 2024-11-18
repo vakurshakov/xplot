@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 from lib_common import *
-from plot_fields import *
-from plot_particles import *
 
 if __name__ == "__main__":
     ncols=2

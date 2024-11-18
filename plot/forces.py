@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from lib_common import *
-from plot_fields import *
-from plot_particles import *
 
 def plot_forces(t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"

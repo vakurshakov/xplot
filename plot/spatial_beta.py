@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from lib_common import *
-from plot_fields import *
-from plot_particles import *
 
 B0 = 0.191
 
