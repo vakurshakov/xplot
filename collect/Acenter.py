@@ -2,10 +2,8 @@
 
 from final_common import *
 
-import scipy.integrate as I
-
 # beta calculation
-res_dir = f"./{params_path}/Data1D"
+res_dir = f"{params_path}/Data1D"
 mkdir(res_dir)
 
 tmin = 0
@@ -40,7 +38,7 @@ def parse_data(t):
     pa = pai + pae
 
     rs = np.arange(0, data_shape[0] // 2) * dx
-    pd = I.cumtrapz((pr - pa) / (rs + 0.1), dx=dx, initial=0)
+    pd = cumulative_trapezoid((pr - pa) / (rs + 0.1), dx=dx, initial=0)
     pd = -(pd - pd[-1])
 
     return b, ni, pri, pai, pre, pae, pd

@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
 from lib_common import *
-from plot_fields import *
-from plot_particles import *
 
-res_dir = f"./{params_path}/Other"
+res_dir = f"{params_path}/Other"
 mkdir(res_dir)
 
 tmin = 0
@@ -78,7 +76,7 @@ def parse_data(t):
 
 def find_correct_timestep(t):
     for t_corr in range(t_range[0], t + 1, 1)[::-1]:
-        if is_correct_timestep1(t_corr):
+        if is_correct_timestep(t_corr):
             print(f"{t_corr:5d} [dts]", f"{t_corr * dts / tau:6.3f}", "[tau]")
             break
         if t_corr == t_range[0]:

@@ -2,12 +2,6 @@
 
 from lib_common import *
 
-def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cmap=signed_cmap):
-    prefix = f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, cmap, v)
-    if title != None:
-        generate_info(field, plane, title)
-    return field
 
 def plot_particles3(s, t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"

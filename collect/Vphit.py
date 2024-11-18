@@ -2,7 +2,7 @@
 
 from lib_common import *
 
-res_dir = f"./{params_path}/Data1D"
+res_dir = f"{params_path}/Data1D"
 mkdir(res_dir)
 
 tmin   = 0

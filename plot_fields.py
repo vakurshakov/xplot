@@ -2,24 +2,6 @@
 
 from lib_common import *
 
-def electric_field(plane, subplot=None, title=None):
-    v = (-2e-2, +2e-2)
-    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, signed_cmap, v)
-    if title != None:
-        generate_info(field, plane, title)
-    return field
-
-def magnetic_field(plane, subplot=None, title=None):
-    DB = B0
-    cmap = unsigned_cmap if plane == 'Z' else signed_cmap
-    vmap = (0, B0) if plane == 'Z' else (B0 - DB, B0 + DB)
-    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, cmap, vmap)
-    if title != None:
-        generate_info(field, plane, title)
-    return field
-
 def plot_fields3(t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
     if not timestep_should_be_processed(t, filename):

@@ -248,3 +248,28 @@ def get_parsed_field(field, name, plane, comp, t):
 
 def get_parsed_scalar(field, t):
     return parse_file(f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}")
+
+def electric_field(plane, subplot=None, title=None):
+    v = (-2e-2, +2e-2)
+    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
+    field = Field(prefix, subplot, None, signed_cmap, v)
+    if title != None:
+        generate_info(field, plane, title)
+    return field
+
+def magnetic_field(plane, subplot=None, title=None):
+    DB = B0
+    cmap = unsigned_cmap if plane == 'Z' else signed_cmap
+    vmap = (0, B0) if plane == 'Z' else (B0 - DB, B0 + DB)
+    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
+    field = Field(prefix, subplot, None, cmap, vmap)
+    if title != None:
+        generate_info(field, plane, title)
+    return field
+
+def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cmap=signed_cmap):
+    prefix = f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
+    field = Field(prefix, subplot, None, cmap, v)
+    if title != None:
+        generate_info(field, plane, title)
+    return field

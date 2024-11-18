@@ -2,7 +2,7 @@
 
 from lib_common import *
 
-res_dir = f"./{params_path}/Data2D"
+res_dir = f"{params_path}/Data2D"
 mkdir(res_dir)
 
 tmin = int(0 * tau / dts)
