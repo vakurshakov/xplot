@@ -4,22 +4,24 @@ sys.path.append("../")
 
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+from scipy.integrate import cumulative_trapezoid
 
 import struct
 import numpy as np
 
-from mpi4py import MPI
+# from mpi4py import MPI
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-proc = comm.Get_size()
+# comm = MPI.COMM_WORLD
+rank = 0 # comm.Get_rank()
+proc = 1 # comm.Get_size()
 
 
 from lib_plot import *
 from lib_xy_rphi import *
 
-from np_2000.parameters import *
-# from np_5000.parameters import *
+# from nx_140_np_200.parameters import *
+# from nx_140_np_1000.parameters import *
+from nx_140_np_1000_glinskiy.parameters import *
 
 # Data layout in fields files
 fields = [ "Ex", "Ey", "Ez", "Bx", "By", "Bz" ]
@@ -32,16 +34,20 @@ pressures = {
 
 sorts = [ "Electrons", "Ions" ]
 
-# remap into c / w_pi units
-# dx /= np.sqrt(mi_me)
-# dy /= np.sqrt(mi_me)
-# dz /= np.sqrt(mi_me)
-buff = 10
+boundaries = {
+    'X': (-0.5 * Ny * dy, +0.5 * Ny * dy, 0, Nz * dz),
+    'Y': (-0.5 * Nx * dx, +0.5 * Nx * dx, 0, Nz * dz),
+    'Z': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy),
+}
 
-boundaries = (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy)
+data_shape = {
+    'X': (Ny + 3, Nz + 3),
+    'Y': (Nx + 3, Nz + 3),
+    'Z': (Nx + 3, Ny + 3),
+}
 
-data_shape = (Ny + 3, Nx + 3)
-COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape[0], 0, data_shape[1]))
+
+COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape['Z'][0], 0, data_shape['Z'][1]))
 
 def mkdir(dirname):
     if not os.path.exists(dirname) and rank == 0:
@@ -65,7 +71,7 @@ def get_particles_file(sort, diag_name, timestep, prefix=None):
 def get_fields_file(timestep, prefix=None):
     p = get_prefix(timestep) if prefix == None else prefix
     t_str = str(int(timestep)).zfill(4)
-    return f"{p}/Fields/Diag2D/FieldAvgPlaneZ_{t_str}"
+    return f"{p}/Fields/Diag2D/FieldPlaneZ_{t_str}"
 
 def parse_file(path, offset=0):
     file = open(path, "rb")
@@ -85,8 +91,9 @@ def parse_file(path, offset=0):
     return raw.reshape((nx, ny)).transpose()
 
 def is_correct_timestep(t):
-    fields_file = get_fields_file(t)
-    fields_file_bytesize = 4 * (2 + data_shape[0] * data_shape[1] * len(fields))
+    plane = "Z"
+    fields_file = f"{get_prefix(t)}/Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}_{str(t).zfill(4)}"
+    fields_file_bytesize = 4 * (2 + data_shape[plane][0] * data_shape[plane][1] * len(fields))
     return os.path.isfile(fields_file) and os.path.getsize(fields_file) == fields_file_bytesize
 
 def check_consistency(tmin: int, tmax: int):
@@ -135,7 +142,10 @@ def sliding_average(linear, w=5):
 
 
 # MPI utilities
-def reduce_array(a, rank, proc):
+def create_t_range(tmin, tmax, offset):
+    return np.arange(tmin + rank * offset, tmax + 1, proc * offset)
+
+def reduce_array(a):
     length = len(a)
     chunk = length // proc
     remain = length % proc
@@ -182,3 +192,59 @@ def inverse_fourier_transform(f_data):
     i_data = np.imag(data)
 
     return r_data, i_data
+
+
+# 3D-specific part
+def generate_info(diag, plane, title):
+    axes_args = {
+        'X': [ "$(y, z, x=0)$", 'y', 'z' ],
+        'Y': [ "$(x, z, y=0)$", 'x', 'z' ],
+        'Z': [ "$(x, y, z=100)$", 'x', 'y' ]
+    }
+
+    diag.boundaries = boundaries[plane]
+    bx = boundaries[plane][0] + buff * dx
+    ex = boundaries[plane][1] - buff * dx
+    by = boundaries[plane][2] + (buff * dy if plane == 'Z' else 0)
+    ey = boundaries[plane][3] - (buff * dy if plane == 'Z' else 0)
+
+    diag.set_axes_args(
+        title=title + axes_args[plane][0],
+        xlim=(bx, ex),
+        ylim=(by, ey),
+        xlabel=f"${axes_args[plane][1]},""~c/\\omega_{pe}$",
+        ylabel=f"${axes_args[plane][2]},""~c/\\omega_{pe}$",
+        xticks=np.linspace(bx, ex, 5),
+        yticks=np.linspace(by, ey, 5),
+    )
+
+def timestep_should_be_processed(t, filename):
+    if not is_correct_timestep1(t):
+        print(f"Timestep {t} [dts], {t * dts / tau} is incorrect, it would be skipped.")
+        return False
+    # if os.path.exists(filename):
+    #     print(f"Timestep {t} [dts], {t * dts / tau} was already processed, it would be skipped.")
+    #     return False
+    return True
+
+def get_parsed_field(field, name, plane, comp, t):
+    filename = f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}"
+    if comp == 'z':
+        return parse_file(filename, fields.index(name + comp))
+    elif (plane == "X" and comp == "x"):
+        # we return A_phi, thus we should invert the second half in y
+        data = parse_file(filename, fields.index(name + comp))
+        data[:, (data_shape[plane][0] // 2 + 1):] *= -1
+        return data
+    elif (plane == "X" and comp == "y") or \
+         (plane == "Y" and comp in "xy"):
+        data = parse_file(filename, fields.index(name + comp))
+        data[:, :(data_shape[plane][0] // 2)] *= -1
+        return data
+    elif plane == "Z":
+        e_x = parse_file(filename, fields.index(f"{name}x"))
+        e_y = parse_file(filename, fields.index(f"{name}y"))
+        return vx_vy_to_vr_va(e_x, e_y, COS, SIN)
+
+def get_parsed_scalar(field, t):
+    return parse_file(f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}")
