@@ -9,11 +9,11 @@ from scipy.integrate import cumulative_trapezoid
 import struct
 import numpy as np
 
-# from mpi4py import MPI
+from mpi4py import MPI
 
-# comm = MPI.COMM_WORLD
-rank = 0 # comm.Get_rank()
-proc = 1 # comm.Get_size()
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+proc = comm.Get_size()
 
 
 from lib_plot import *
@@ -219,12 +219,12 @@ def generate_info(diag, plane, title):
     )
 
 def timestep_should_be_processed(t, filename):
-    if not is_correct_timestep1(t):
+    if not is_correct_timestep(t):
         print(f"Timestep {t} [dts], {t * dts / tau} is incorrect, it would be skipped.")
         return False
-    # if os.path.exists(filename):
-    #     print(f"Timestep {t} [dts], {t * dts / tau} was already processed, it would be skipped.")
-    #     return False
+    if os.path.exists(filename):
+        print(f"Timestep {t} [dts], {t * dts / tau} was already processed, it would be skipped.")
+        return False
     return True
 
 def get_parsed_field(field, name, plane, comp, t):
