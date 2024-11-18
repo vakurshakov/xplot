@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -91,7 +91,7 @@ def plot(t, s):
 
         j.data = jra[i]
         mvv.data = parse_file(get_particles_file(s, f"{p_val}PlaneAvgZ", t))
-        
+
         v = np.divide(j.data, n.data, out=np.zeros_like(j.data), where=(np.abs(n.data) > 1e-4))
         m = mi_me if s == "Ions" else 1.0
         prr.data = mvv.data - n.data * m * v * v

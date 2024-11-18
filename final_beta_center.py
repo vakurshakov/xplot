@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from final_common import *
 
@@ -46,7 +46,7 @@ ax.fill_between(
     sliding_average(ts[tmin:tmax], w),
     sliding_average(pr[tmin:tmax], w),
     np.zeros_like(sliding_average(pr[tmin:tmax], w)),
-    color="grey", 
+    color="grey",
     alpha=0.2,
     zorder=-1
 )

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -26,7 +26,7 @@ for t in reduce_array(t_range, rank, proc):
     comp_Jx_i = parse_file(get_particles_file("Ions", "CurrentPlaneAvgZ", t), 0)
     comp_Jy_i = parse_file(get_particles_file("Ions", "CurrentPlaneAvgZ", t), 1)
     _, comp_Ja_i = vx_vy_to_vr_va(comp_Jx_i, comp_Jy_i, COS, SIN)
-    
+
     comp_n_e = parse_file(get_particles_file("Electrons", "DensPlaneZ", t))
     comp_n_i = parse_file(get_particles_file("Ions", "DensPlaneZ", t))
 
@@ -39,7 +39,7 @@ for t in reduce_array(t_range, rank, proc):
     Ja_i.append(comp_Ja_i)
     n_e.append(comp_n_e)
     n_i.append(comp_n_i)
-    
+
     v_e.append(np.divide(comp_Ja_e, comp_n_e, out=np.zeros_like(comp_Ja_e), where=(np.abs(comp_n_e) >= 1e-4)))
     v_i.append(np.divide(comp_Ja_i, comp_n_i, out=np.zeros_like(comp_Ja_i), where=(np.abs(comp_n_i) >= 1e-4)))
 

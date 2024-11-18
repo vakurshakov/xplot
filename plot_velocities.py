@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -32,7 +32,7 @@ wx = 0.05
 x0 = 3.00
 xmin = x0 - wx
 xmax = x0 + wx
-    
+
 fig.text(0.066, 0.85, "$\\langle \\omega_s \\rangle = \\langle J_s / n_s \\rangle_{\\phi} / r$", size=15)
 
 for d in [v_e, v_i]:

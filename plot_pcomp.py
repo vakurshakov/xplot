@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -22,8 +22,8 @@ diag_1d = [Prr_avg, Paa_avg, Prr_l, Paa_l]
 
 bx = boundaries[0] + buff * dx
 ex = boundaries[1] - buff * dx
-by = boundaries[2] + buff * dy 
-ey = boundaries[3] - buff * dy 
+by = boundaries[2] + buff * dy
+ey = boundaries[3] - buff * dy
 
 arg_2d = {
     "xlim": (bx, ex),
@@ -51,7 +51,7 @@ tmax = int(8 * tau / dts)
 for sort in sorts:
     def prr_title(sort):
         return "\\Pi_{rr}^" + str.lower(sort[0])
-    
+
     def paa_title(sort):
         return "\\Pi_{\\phi \\phi}^" + str.lower(sort[0])
 
@@ -63,11 +63,11 @@ for sort in sorts:
 
     Prr.data = parse_file(get_particles_file(sort, f"{pressures['Prr']}PlaneAvgZ", tmax))
     Paa.data = parse_file(get_particles_file(sort, f"{pressures['Paa']}PlaneAvgZ", tmax))
-    
+
     Pmax = np.max(Prr.data)
     Prr.data /= Pmax
     Paa.data /= Pmax
-    
+
     for diag in diag_2d:
         diag.axes_position.set_aspect(1)
         diag.draw(add_cbar=True)
@@ -76,7 +76,7 @@ for sort in sorts:
     Prr_avg.data = phi_averaged(Prr.data, R_MAP)
     Paa_avg.data = phi_averaged(Paa.data, R_MAP)
 
-    Prr_l.data = Prr.data[data_shape[1] // 2, data_shape[0] // 2:] 
+    Prr_l.data = Prr.data[data_shape[1] // 2, data_shape[0] // 2:]
     Paa_l.data = Paa.data[data_shape[1] // 2, data_shape[0] // 2:]
 
     for diag in diag_1d:

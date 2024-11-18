@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from final_common import *
 from matplotlib.ticker import MultipleLocator
@@ -14,7 +14,7 @@ mkdir(res_dir)
 
 plot = Field(None, subplot(fig, gs, 0, 0), boundaries)
 plot.set_axes_args(
-  title="{\\rm Scheme}", 
+  title="{\\rm Scheme}",
   xticklabels=[],
   yticklabels=[],
   **arg_2d,

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -35,11 +35,11 @@ def inverse_fourier_transform_w(f_data):
     data = np.fft.ifftshift(f_data, axes=0)
     data = np.fft.ifft(data, axis=0)
     data = np.fft.fftshift(data, axes=0)
-    
+
     r_data = np.real(data)
     i_data = np.imag(data)
     return r_data, i_data
-        
+
 def fourier_filter(data):
     data_kw, w = fourier_transform_w(data)
     data_kw[np.where(np.abs(w) > m * Omega_i),:] = 0.0
@@ -51,7 +51,7 @@ def recreate_field(path):
 
     data = np.ndarray((tmax - tmin, len(y_range), data_shape[1]), dtype=np.float32)
     f_data = np.ndarray((tmax - tmin, len(y_range), data_shape[1]), dtype=np.float32)
-    
+
     for y in y_range:
         print("recreating", path, f"{y:4d} [dy]")
         tmp = np.load(f"{path}_xt_y={y}.npy", allow_pickle=True)
@@ -61,7 +61,7 @@ def recreate_field(path):
         f_data[:,(y - y_range[0]),:] = f_tmp
 
     return data, f_data
-        
+
 Er = Field(f"./{params_path}/Data2D/Er", subplot(fig, gs, 0, 0), boundaries, signed_cmap, (-vE_max, vE_max))
 Ea = Field(f"./{params_path}/Data2D/Ea", subplot(fig, gs, 1, 0), boundaries, signed_cmap, (-vE_max, vE_max))
 Er_filtered = Field(None, subplot(fig, gs, 0, 1), boundaries, signed_cmap, (-vFE_max, vFE_max))
@@ -72,8 +72,8 @@ Ea_full, Ea_filtered_full  = recreate_field(Ea.path_to_file)
 
 bx = boundaries[0] + buff * dx
 ex = boundaries[1] - buff * dx
-by = boundaries[2] + buff * dy 
-ey = boundaries[3] - buff * dy 
+by = boundaries[2] + buff * dy
+ey = boundaries[3] - buff * dy
 
 arg_2d = {
     "xlim": (bx, ex),

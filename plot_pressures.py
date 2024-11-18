@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -31,8 +31,8 @@ diag_1d = [Prr_i_avg, Prr_e_avg, Paa_i_avg, Paa_e_avg, Prr_i_l, Prr_e_l, Paa_i_l
 
 bx = boundaries[0] + buff * dx
 ex = boundaries[1] - buff * dx
-by = boundaries[2] + buff * dy 
-ey = boundaries[3] - buff * dy 
+by = boundaries[2] + buff * dy
+ey = boundaries[3] - buff * dy
 
 arg_2d = {
     "xlim": (bx, ex),
@@ -105,7 +105,7 @@ for t in t_range:
     Prr_e_avg.data = phi_averaged(Prr_e.data, R_MAP)
     Paa_e_avg.data = phi_averaged(Paa_e.data, R_MAP)
 
-    Prr_i_l.data = Prr_i.data[data_shape[1] // 2, data_shape[0] // 2:] 
+    Prr_i_l.data = Prr_i.data[data_shape[1] // 2, data_shape[0] // 2:]
     Paa_i_l.data = Paa_i.data[data_shape[1] // 2, data_shape[0] // 2:]
     Prr_e_l.data = Prr_e.data[data_shape[1] // 2, data_shape[0] // 2:]
     Paa_e_l.data = Paa_e.data[data_shape[1] // 2, data_shape[0] // 2:]

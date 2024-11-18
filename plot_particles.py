@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1.2))
         gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1.2, 1], figure=fig)
 
-        v = 1
+        v = 1.5
         ns = []
         ns.append(particles_field(s, "Dens", "Y", subplot(fig, gs, 0, 0), f"$n_{s[0].lower()}$", (0, v), unsigned_cmap))
         ns.append(particles_field(s, "Dens", "Z", subplot(fig, gs, 0, 1), f"$n_{s[0].lower()}$", (0, v), unsigned_cmap))

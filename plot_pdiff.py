@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from lib_common import *
 
@@ -15,8 +15,8 @@ diag_2d = [dPrr_i, dPrr_e]
 
 bx = boundaries[0] + buff * dx
 ex = boundaries[1] - buff * dx
-by = boundaries[2] + buff * dy 
-ey = boundaries[3] - buff * dy 
+by = boundaries[2] + buff * dy
+ey = boundaries[3] - buff * dy
 
 arg_2d = {
     "xlim": (bx, ex),
