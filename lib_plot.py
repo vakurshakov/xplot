@@ -259,9 +259,6 @@ class Field:
     def clear(self):
         self.axes_position.cla()
 
-        if self.cbar != None:
-            self.cbar.remove()
-            self.cbar = None
 
     def set_axes_args(self, **kwargs):
         supported_names = [
