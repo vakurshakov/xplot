@@ -8,15 +8,12 @@ fi
 params_path=$1
 shift 1
 
-rename=${1:-0}
-shift 1
-
 if [[ $# == 0 ]]; then
     diagnostics=(
         Fields
-        Currents_r
-        Currents_phi
-        Pressures
+        Info_Ions
+        Info_Electrons
+        Currents
     )
 else
     diagnostics=$@
@@ -25,13 +22,11 @@ fi
 for d in ${diagnostics[*]}; do
     pushd ./$params_path/$d
 
-    if [[ rename != 0 ]]; then
-        i=0
-        for f in *; do
-            mv $f $(printf %04d $i)".png"
-            i=$((i + 1))
-        done
-    fi
+    # i=0
+    # for f in *; do
+    #     mv $f $(printf %04d $i)".png"
+    #     i=$((i + 1))
+    # done
 
     ffmpeg -y -i ./%04d.png -r 15 ../Video/$d.mp4
 
