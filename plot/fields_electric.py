@@ -25,12 +25,12 @@ def update_data(t):
     if not timestep_should_be_processed(t, filename, False):
         return
 
-    agg(er[0], get_parsed_field(er[0], "E", "X", "y", t))
-    agg(ea[0], get_parsed_field(ea[0], "E", "X", "x", t))
-    agg(ez[0], get_parsed_field(ez[0], "E", "X", "z", t))
-    agg(er[1], get_parsed_field(er[1], "E", "Y", "x", t))
-    agg(ea[1], get_parsed_field(ea[1], "E", "Y", "y", t))
-    agg(ez[1], get_parsed_field(ez[1], "E", "Y", "z", t))
+    er[0].data = agg(er[0].data, get_parsed_field(er[0], "E", "X", "y", t))
+    ea[0].data = agg(ea[0].data, get_parsed_field(ea[0], "E", "X", "x", t))
+    ez[0].data = agg(ez[0].data, get_parsed_field(ez[0], "E", "X", "z", t))
+    er[1].data = agg(er[1].data, get_parsed_field(er[1], "E", "Y", "x", t))
+    ea[1].data = agg(ea[1].data, get_parsed_field(ea[1], "E", "Y", "y", t))
+    ez[1].data = agg(ez[1].data, get_parsed_field(ez[1], "E", "Y", "z", t))
 
 
 if __name__ == "__main__":

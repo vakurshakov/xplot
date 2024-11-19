@@ -276,5 +276,5 @@ def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cm
         generate_info(field, plane, title)
     return field
 
-def agg(field, data):
-    field.data = data + (field.data if np.any(field.data) else np.zeros_like(data))
+def agg(to_agg, data):
+    return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
