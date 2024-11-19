@@ -25,9 +25,6 @@ def update_data(t):
     if not timestep_should_be_processed(t, filename, False):
         return
 
-    def agg(field, data):
-        field.data = data + (field.data if np.any(field.data) else np.zeros_like(data))
-
     agg(er[0], get_parsed_field(er[0], "E", "X", "y", t))
     agg(ea[0], get_parsed_field(ea[0], "E", "X", "x", t))
     agg(ez[0], get_parsed_field(ez[0], "E", "X", "z", t))
