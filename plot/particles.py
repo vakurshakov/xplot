@@ -14,7 +14,7 @@ def plot_particles3(s, t):
 
     for i, plane in enumerate(planes):
         e = (-1) if s == "Electrons" else (+1)
-        ns[i].data = e * parse_file(f"{get_prefix(t)}/{ns[i].path_to_file}_{str(t).zfill(4)}")
+        ns[i].data = e * get_parsed_scalar(ns[i], t)
         jzs[i].data = get_parsed_field(jzs[i], "E", plane, "z", t)
 
     for i, diag in enumerate(jrs + jas + jzs + ns):

@@ -2,7 +2,7 @@
 
 from lib_common import *
 
-def plot_fields_b_aligned(t):
+def plot_baligned_fields(t):
     for tt in range(t, t + offset):
         update_data(tt)
 
@@ -15,7 +15,7 @@ def plot_fields_b_aligned(t):
     annotate_x(ep.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
 
     fig.tight_layout()
-    fig.savefig(f"{res_dir}/{str(t // offset).zfill(4)}.png")
+    fig.savefig(f"{res_dir}/baligned_field_{str(t // offset).zfill(4)}.png")
 
     for diag in [ep]: # [ep, etr, etz]:
         diag.clear()
@@ -58,11 +58,9 @@ if __name__ == "__main__":
     br = np.divide(br, b, where=(b > 1e-3), out=np.zeros_like(b))
     bz = np.divide(bz, b, where=(b > 1e-3), out=np.zeros_like(b))
 
-    res_dir = f"{params_path}/Fields_BAligned"
+    res_dir = f"{params_path}/Other"
     mkdir(res_dir)
 
     offset = 100
     t0 = 25 * offset
-
-    for t in create_t_range(t0, int(time / dts), offset):
-        plot_fields_b_aligned(t)
+    plot_baligned_fields(t0)

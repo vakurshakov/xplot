@@ -2,7 +2,7 @@
 
 from lib_common import *
 
-def plot_fields_b_aligned(t):
+def plot_baligned_electric_potential(t):
     for tt in range(t, t + offset):
         update_data(tt)
 
@@ -44,7 +44,7 @@ def plot_fields_b_aligned(t):
     annotate_x(ep.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
 
     fig.tight_layout()
-    fig.savefig(f"{res_dir}/{str(t // offset).zfill(4)}.png")
+    fig.savefig(f"{res_dir}/baligned_epotential_{str(t // offset).zfill(4)}.png")
 
     for diag in [ep, phi]:
         diag.clear()
@@ -102,12 +102,9 @@ if __name__ == "__main__":
     bz = get_parsed_field(b, "B", "Y", "z", 0)
     b = np.hypot(br, bz)
 
-    res_dir = f"{params_path}/EPotential_BAligned"
+    res_dir = f"{params_path}/Other"
     mkdir(res_dir)
 
     offset = 100
     t0 = 25 * offset
-
-    for t in create_t_range(t0, int(time / dts), offset):
-        plot_fields_b_aligned(t)
-        break
+    plot_baligned_electric_potential(t0)
