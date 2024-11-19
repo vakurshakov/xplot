@@ -11,11 +11,11 @@ def plot_fields_b_aligned(t):
     ep.draw(add_cbar=True)
     ep.draw_info()
 
-    zs = np.arange(0, data_shape["Y"][1])[:10] * dx
+    zs = np.arange(0, data_shape["Y"][1]) * dx
     xc = data_shape["Y"][0] // 2
 
     ax = phi.axes_position
-    e_c = ep.data[:10,xc] / T_i
+    e_c = ep.data[:,xc] / T_i
     ax.plot(zs, e_c, label="$E_{\\|}(z) / T_i$")
     ax.plot(zs, -cumulative_trapezoid(e_c, zs, dx, initial=0), label="$\\varphi(z) / T_i$")
     ax.legend(fontsize=0.8 * ssmol, loc="lower right")
