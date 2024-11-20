@@ -3,7 +3,7 @@
 from collect import *
 
 
-def parse_data(t):
+def parse(t):
     b = center_avg(get_parsed_field(get_fields_path("Z"), "B", "Z", "z", t))
     ni = center_avg(parse_file(get_particles_file("Ions", "Dens", "Z", t)))
     ne = center_avg(parse_file(get_particles_file("Electrons", "Dens", "Z", t)))
@@ -37,7 +37,7 @@ named_arrays = [
     ("pd", []),
 ]
 
-def output_file(name):
+def output(name):
     return f"{res_dir}/{name}_t"
 
-process_collection(parse_data, named_arrays, output_file)
+process_collection(parse, named_arrays, output)

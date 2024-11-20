@@ -11,7 +11,7 @@ for r, map in enumerate(R_MAP):
     if (r0 <= r and r < rmax) and (r % rstep == 0):
         rmap.append((r*dx, map))
 
-def parse_data(t, map):
+def parse(t, map):
     b = get_parsed_field(get_fields_path("Z"), "B", "Z", "z", t)
     er, ea = get_parsed_field(get_fields_path("Z"), "E", "Z", "", t)
     jri, jai = get_parsed_field(get_particles_path("Ions", "Current", "Z"), "E", "Z", "", t)
@@ -28,9 +28,8 @@ named_arrays = [
     ("jae", []),
 ]
 
-def output_file(name):
+def output(name):
     return f"{res_dir}/{name}_phit_r={r:.2f}"
 
 for r, map in rmap:
-    process_collection(lambda t: parse_data(t, map), named_arrays, output_file, (len(t_range), len(map[0])))
-
+    process_collection(lambda t: parse(t, map), named_arrays, output, ((tmax - tmin), len(map[0])))
