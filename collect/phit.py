@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
-from lib_collect import *
-
-res_dir = f"{params_path}/Data1D"
-mkdir(res_dir)
+from collect import *
 
 r0    = int(1.0 / dx)
 rmax  = int(4.0 / dx)

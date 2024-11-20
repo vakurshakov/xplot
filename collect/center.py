@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-from lib_collect import *
+from collect import *
 
-res_dir = f"{params_path}/Other"
-mkdir(res_dir)
 
 def parse_data(t):
     b = center_avg(get_parsed_field(get_fields_path("Z"), "B", "Z", "z", t))
