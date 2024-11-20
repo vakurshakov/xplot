@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from plot.fourier_common import *
+from fourier import *
 
 ncols=2
 nrows=1
