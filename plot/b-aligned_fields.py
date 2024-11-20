@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from lib_common import *
+from plot import *
 
 def plot_baligned_fields(t):
     for tt in range(t, t + offset):

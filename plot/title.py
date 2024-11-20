@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from lib_common import *
+from plot import *
 
 if __name__ == "__main__":
     ncols=2

@@ -2,7 +2,6 @@
 
 from collect import *
 
-
 def parse(t):
     b = center_avg(get_parsed_field(get_fields_path("Z"), "B", "Z", "z", t))
     ni = center_avg(parse_file(get_particles_file("Ions", "Dens", "Z", t)))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from lib_common import *
+from plot import *
 
 ncols=2
 nrows=2
