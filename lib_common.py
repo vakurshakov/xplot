@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append("../")
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -80,8 +80,8 @@ def get_fields_file(t, plane="Z", prefix=None):
 def get_particles_path(sort, diag_name, plane):
     return f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
 
-def get_particles_file(sort, diag_name, t, prefix=None):
-    return get_parsed_file(t, get_particles_path(sort, diag_name), prefix)
+def get_particles_file(sort, diag_name, plane, t, prefix=None):
+    return get_parsed_file(t, get_particles_path(sort, diag_name, plane), prefix)
 
 def parse_file(path, offset=0):
     file = open(path, "rb")
