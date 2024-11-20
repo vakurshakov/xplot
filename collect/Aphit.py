@@ -49,15 +49,6 @@ for r, map in rmap:
 
         return comp_Bz, comp_Er, comp_Ea, comp_Jr_e, comp_Ja_e, comp_Jr_i, comp_Ja_i
 
-    def find_correct_timestep(t):
-        for t_corr in range(t_range[0], t + 1, 1)[::-1]:
-            if is_correct_timestep(t_corr):
-                print(f"r: {r}, phi_n: {len(map[0])}", f"{t_corr:5d} [dts]", f"{t_corr * dts / tau:6.3f}", "[tau]")
-                break
-            if t_corr == t_range[0]:
-                print(f"Warning! Timestep is incorrect, last correct step will be used.")
-        return t_corr
-
     for t in reduce_array(t_range, rank, proc):
         comp_Bz, comp_Er, comp_Ea, comp_Jr_e, comp_Ja_e, comp_Jr_i, comp_Ja_i = parse_data(find_correct_timestep(t))
 
