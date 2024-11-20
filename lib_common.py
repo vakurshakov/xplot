@@ -101,13 +101,13 @@ def parse_file(path, offset=0):
     return raw.reshape((nx, ny)).transpose()
 
 # Timestep consistency utils
-def is_correct_timestep(t: int):
+def is_correct_timestep(t):
     plane = "Z"
     fields_file = f"{get_prefix(t)}/Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}_{str(t).zfill(4)}"
     fields_file_bytesize = 4 * (2 + data_shape[plane][0] * data_shape[plane][1] * len(fields))
     return os.path.isfile(fields_file) and os.path.getsize(fields_file) == fields_file_bytesize
 
-def check_consistency(tmin: int, tmax: int):
+def check_consistency(tmin, tmax):
     for t in range(tmin, tmax):
         if not is_correct_timestep(t):
             print(f"Data is inconsistent. Valid data range is: ({tmin}, {t}) [dts] or ({tmin * dts / tau}, {t * dts / tau}) [tau].")
@@ -225,8 +225,8 @@ def inverse_fourier_transform(f_data):
 
 
 # 3D-specific part
-def get_parsed_field(name, plane, comp, t, prefix=None):
-    file = get_fields_file(t, plane, prefix)
+def get_parsed_field(path, name, plane, comp, t, prefix=None):
+    file = get_parsed_file(t, path, prefix)
     if comp == 'z':
         return parse_file(file, fields.index(name + comp))
     elif (plane == "X" and comp == "x"):
@@ -240,8 +240,8 @@ def get_parsed_field(name, plane, comp, t, prefix=None):
         data[:, :(data_shape[plane][0] // 2)] *= -1
         return data
     elif plane == "Z":
-        fx = parse_file(file, fields.index(f"{name}x"))
-        fy = parse_file(file, fields.index(f"{name}y"))
+        fx = parse_file(file, fields.index(name + "x"))
+        fy = parse_file(file, fields.index(name + "y"))
         return vx_vy_to_vr_va(fx, fy, COS, SIN)
 
 def get_parsed_scalar(field, t):

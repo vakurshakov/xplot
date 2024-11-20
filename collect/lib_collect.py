@@ -9,7 +9,8 @@ def center_avg(d, w=5):
     c1 = data_shape["Z"][1] // 2
     return np.mean(d[c1-w:c1+w, c0-w:c0+w])
 
-def process(parse_data, named_arrays, output_file):
+
+def process_collection(parse_data, named_arrays, output_file, shape=None):
     for t in t_range:
         data = parse_data(find_correct_timestep(t))
 
@@ -21,4 +22,6 @@ def process(parse_data, named_arrays, output_file):
 
         if (rank == 0):
             arr = aggregate_array(gathered_list)
+            if shape != None:
+                arr = np.reshape(arr, shape)
             np.save(output_file(name), arr)
