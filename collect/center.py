@@ -1,36 +1,27 @@
 #!/usr/bin/env python3
 
-from lib_common import *
+from lib_collect import *
 
 res_dir = f"{params_path}/Other"
 mkdir(res_dir)
 
-tmin = 0
-tmax = int(time / dts) + 1
-t_range = reduce_array(np.arange(tmin, tmax, 1))
-
 def parse_data(t):
-    b = get_parsed_field(magnetic_field("Z"), "B", "Z", "z", t)
+    b = get_parsed_field("B", "Z", "z", t)
 
-    ni = get_parsed_scalar(particles_field("Ions", "Dens", "Z"), t)
-    pri = get_parsed_scalar(particles_field("Ions", pressures["Prr"], "Z"), t)
-    pai = get_parsed_scalar(particles_field("Ions", pressures["Paa"], "Z"), t)
+    ni = parse_file(get_particles_file("Ions", "Dens", "Z", t))
+    pri = parse_file(get_particles_file("Ions", pressures["Prr"], "Z", t))
+    pai = parse_file(get_particles_file("Ions", pressures["Paa"], "Z", t))
 
-    ne = get_parsed_scalar(particles_field("Electrons", "Dens", "Z"), t)
-    pre = get_parsed_scalar(particles_field("Electrons", pressures["Prr"], "Z"), t)
-    pae = get_parsed_scalar(particles_field("Electrons", pressures["Paa"], "Z"), t)
+    ne = parse_file(get_particles_file("Electrons", "Dens", "Z", t))
+    pre = parse_file(get_particles_file("Electrons", pressures["Prr"], "Z", t))
+    pae = parse_file(get_particles_file("Electrons", pressures["Paa"], "Z", t))
 
-    def center(d, w=5):
-        c0 = data_shape["Z"][0] // 2
-        c1 = data_shape["Z"][1] // 2
-        return np.mean(d[c1-w:c1+w, c0-w:c0+w])
-
-    b = center(b)
+    b = center_avg(b)
     pri = phi_averaged(pri, R_MAP)
     pre = phi_averaged(pre, R_MAP)
 
-    ni = center(ni)
-    ne = center(ne)
+    ni = center_avg(ni)
+    ne = center_avg(ne)
     pai = phi_averaged(pai, R_MAP)
     pae = phi_averaged(pae, R_MAP)
 
@@ -53,15 +44,7 @@ named_arrays = [
     ("pd", []),
 ]
 
-for t in t_range:
-    data = parse_data(find_correct_timestep(t))
+def output_file(name):
+    return f"{res_dir}/{name}_t"
 
-    for d, (_, arr) in zip(data, named_arrays):
-        arr.append(d)
-
-for name, arr in named_arrays:
-    gathered_list = comm.gather(arr, root=0)
-
-    if (rank == 0):
-        arr = aggregate_array(gathered_list)
-        np.save(f"{res_dir}/{name}_t", arr)
+process(parse_data, named_arrays, output_file)

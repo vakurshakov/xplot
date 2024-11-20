@@ -55,23 +55,33 @@ def mkdir(dirname):
 
 mkdir(f"./{params_path}/Video")
 
+def agg(to_agg, data):
+    return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
+
 # Berendeev's data reading utilities
-def get_prefix(timestep, restarts=restart_timesteps, prefixes=prefixes):
+def get_prefix(t, restarts=restart_timesteps, prefixes=prefixes):
     i = 0
     for restart in restarts:
-        if (timestep > restart):
+        if (t > restart):
             i += 1
     return prefixes[i]
 
-def get_particles_file(sort, diag_name, timestep, prefix=None):
-    p = get_prefix(timestep) if prefix == None else prefix
-    t_str = str(int(timestep)).zfill(4)
-    return f"{p}/Particles/{sort}/Diag2D/{diag_name}{t_str}"
+def get_parsed_file(t, path, prefix=None):
+    p = get_prefix(t) if prefix == None else prefix
+    t_str = str(int(t)).zfill(4)
+    return f"{p}/{path}_{t_str}"
 
-def get_fields_file(timestep, prefix=None):
-    p = get_prefix(timestep) if prefix == None else prefix
-    t_str = str(int(timestep)).zfill(4)
-    return f"{p}/Fields/Diag2D/FieldPlaneZ_{t_str}"
+def get_fields_path(plane):
+    return f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
+
+def get_fields_file(t, plane="Z", prefix=None):
+    return get_parsed_file(t, get_fields_path(plane), prefix)
+
+def get_particles_path(sort, diag_name, plane):
+    return f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
+
+def get_particles_file(sort, diag_name, t, prefix=None):
+    return get_parsed_file(t, get_particles_path(sort, diag_name), prefix)
 
 def parse_file(path, offset=0):
     file = open(path, "rb")
@@ -215,6 +225,28 @@ def inverse_fourier_transform(f_data):
 
 
 # 3D-specific part
+def get_parsed_field(name, plane, comp, t, prefix=None):
+    file = get_fields_file(t, plane, prefix)
+    if comp == 'z':
+        return parse_file(file, fields.index(name + comp))
+    elif (plane == "X" and comp == "x"):
+        # we return A_phi, thus we should invert the second half in y
+        data = parse_file(file, fields.index(name + comp))
+        data[:, (data_shape[plane][0] // 2 + 1):] *= -1
+        return data
+    elif (plane == "X" and comp == "y") or \
+         (plane == "Y" and comp in "xy"):
+        data = parse_file(file, fields.index(name + comp))
+        data[:, :(data_shape[plane][0] // 2)] *= -1
+        return data
+    elif plane == "Z":
+        fx = parse_file(file, fields.index(f"{name}x"))
+        fy = parse_file(file, fields.index(f"{name}y"))
+        return vx_vy_to_vr_va(fx, fy, COS, SIN)
+
+def get_parsed_scalar(field, t):
+    return parse_file(f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}")
+
 def generate_info(diag, plane, title):
     axes_args = {
         'X': [ "$(y, z, x=0)$", 'y', 'z' ],
@@ -238,32 +270,9 @@ def generate_info(diag, plane, title):
         yticks=np.linspace(by, ey, 5),
     )
 
-def get_parsed_field(field, name, plane, comp, t):
-    filename = f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}"
-    if comp == 'z':
-        return parse_file(filename, fields.index(name + comp))
-    elif (plane == "X" and comp == "x"):
-        # we return A_phi, thus we should invert the second half in y
-        data = parse_file(filename, fields.index(name + comp))
-        data[:, (data_shape[plane][0] // 2 + 1):] *= -1
-        return data
-    elif (plane == "X" and comp == "y") or \
-         (plane == "Y" and comp in "xy"):
-        data = parse_file(filename, fields.index(name + comp))
-        data[:, :(data_shape[plane][0] // 2)] *= -1
-        return data
-    elif plane == "Z":
-        e_x = parse_file(filename, fields.index(f"{name}x"))
-        e_y = parse_file(filename, fields.index(f"{name}y"))
-        return vx_vy_to_vr_va(e_x, e_y, COS, SIN)
-
-def get_parsed_scalar(field, t):
-    return parse_file(f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}")
-
 def electric_field(plane, subplot=None, title=None):
-    v = (-2e-2, +2e-2)
-    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, signed_cmap, v)
+    vmap = (-2e-2, +2e-2)
+    field = Field(get_fields_path(plane), subplot, None, signed_cmap, vmap)
     if title != None:
         generate_info(field, plane, title)
     return field
@@ -272,18 +281,13 @@ def magnetic_field(plane, subplot=None, title=None):
     DB = B0
     cmap = unsigned_cmap if plane == 'Z' else signed_cmap
     vmap = (0, B0) if plane == 'Z' else (B0 - DB, B0 + DB)
-    prefix = f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, cmap, vmap)
+    field = Field(get_fields_file(plane), subplot, None, cmap, vmap)
     if title != None:
         generate_info(field, plane, title)
     return field
 
 def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cmap=signed_cmap):
-    prefix = f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
-    field = Field(prefix, subplot, None, cmap, v)
+    field = Field(get_particles_path(sort, diag_name, plane), subplot, None, cmap, v)
     if title != None:
         generate_info(field, plane, title)
     return field
-
-def agg(to_agg, data):
-    return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
