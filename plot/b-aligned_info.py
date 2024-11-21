@@ -11,7 +11,7 @@ def plot_baligned_info(t):
 
     xc = data_shape["Y"][0] // 2
     zc = data_shape["Y"][1] // 2
-    xl = xc + 20
+    xl = xc + 25
     w1 = -1 # 4
     w2 = +1
     xs1 = select_magnetic_line(xl + w1)
@@ -58,7 +58,9 @@ def plot_baligned_info(t):
     ax = phi.axes_position
     ax.plot(zs * dz, e_l, label="$E_{\\|}(z) / T_e$", linewidth=3)
 
-    cos_map = np.divide(bz[:,xl], b.data[:,xl], where=(b.data[:,xl] > 1e-3), out=np.ones_like(b.data[:,xl]))
+    cos_map = np.ones_like(b.data[:,xl])
+    for z, x in enumerate(0.5 * (xs1 + xs2)):
+        cos_map[z] = np.divide(bz[z,int(x)], b.data[z,int(x)], where=(b.data[z,int(x)] > 1e-3))
 
     off = 5
     phi_l = -cumulative_trapezoid(e_l, zs * dz / cos_map, initial=0)
