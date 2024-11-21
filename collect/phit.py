@@ -2,9 +2,9 @@
 
 from collect import *
 
-r0    = int(1.0 / dx)
-rmax  = int(4.0 / dx)
-rstep = 5
+r0    = int(8 / dx)   # dx units
+rmax  = int(16 / dx)  # dx units
+rstep = 5             # dimensionless
 
 rmap = []
 for r, map in enumerate(R_MAP):
@@ -19,17 +19,25 @@ def parse(t, map):
     return b[map], er[map], ea[map], jri[map], jai[map], jre[map], jae[map]
 
 named_arrays = [
-    ("b", []),
-    ("er", []),
-    ("ea", []),
-    ("jri", []),
-    ("jai", []),
-    ("jre", []),
-    ("jae", []),
+    ["b", []],
+    ["er", []],
+    ["ea", []],
+    ["jri", []],
+    ["jai", []],
+    ["jre", []],
+    ["jae", []],
 ]
 
-def output(name):
+def output(name, r):
     return f"{res_dir}/{name}_phit_r={r:.2f}"
 
 for r, map in rmap:
-    process_collection(lambda t: parse(t, map), named_arrays, output, ((tmax - tmin), len(map[0])))
+    process_collection(
+        named_arrays,
+        lambda t: parse(t, map),
+        lambda name: output(name, r),
+        shape=((tmax - tmin), len(map[0])))
+
+    # Clearing the arrays, after collection
+    for _, arr in named_arrays:
+        arr = []

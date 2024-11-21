@@ -131,7 +131,7 @@ def find_correct_timestep(t, t_range):
         if not is_correct_timestep(t_c):
             print(f"Warning! Timestep {t_c} is incorrect, first previous correct step will be used.")
             continue
-        print(f"{t_c} [dts]", f"{t_c * dts / tau:6.3f}", "[tau]")
+        print(f"{t_c:4d} [dts]", f"{t_c * dts / tau:6.3f}", "[tau]")
         return t_c
     return t_c
 

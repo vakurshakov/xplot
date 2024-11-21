@@ -26,17 +26,17 @@ def parse(t):
     return b, ni, ne, pri[0], pai[0], pre[0], pae[0], pd[0]
 
 named_arrays = [
-    ("b", []),
-    ("ni", []),
-    ("ne", []),
-    ("pri", []),
-    ("pai", []),
-    ("pre", []),
-    ("pae", []),
-    ("pd", []),
+    ["b", []],
+    ["ni", []],
+    ["ne", []],
+    ["pri", []],
+    ["pai", []],
+    ["pre", []],
+    ["pae", []],
+    ["pd", []],
 ]
 
 def output(name):
     return f"{res_dir}/{name}_t"
 
-process_collection(parse, named_arrays, output)
+process_collection(named_arrays, parse, output)
