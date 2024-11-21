@@ -13,17 +13,20 @@ mkdir(res_dir)
 
 r_range = [2.25, 2.5, 2.75, 3.0] # reduce_array(np.arange(1.00, 3.76, 0.25), rank, proc)
 
-names = {
-    "Er": ("E_r", 1e-5),
-    # "Ea": ("E_{\\phi}", 1e-5),
-}
+named_props = [
+    ["Er", ("E_r", 1e-5)],
+    # ["Ea", ("E_{\\phi}", 1e-5)],
+]
+
+m0 = 3
+w0 = 0.68
 
 arg_1d = {
     "xlim": (f_tmin, f_tmax),
     "xticks": np.linspace(f_tmin, f_tmax, 5),
 }
 
-for name, (title, max_at) in names.items():
+for name, (title, max_at) in named_props:
     for r in r_range:
         # Original map
         F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2$", r, 0)
@@ -37,7 +40,7 @@ for name, (title, max_at) in names.items():
 
 
         # Clearing and making filtered map
-        F_at_filtered = prepare_field_phit(subplot(fig, gs, 1, 0), names, f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2,~m = {m0:0d}$", r, 0)
+        F_at_filtered = prepare_field_phit(subplot(fig, gs, 1, 0), named_props, f"$|{title}(\\phi,\,t,\,r = {r:.2f})|^2,~m = {m0:0d}$", r, 0)
 
         F_mw_complex, w, m = fourier_transform(f_data)
         F_mw_complex[:, np.where(np.abs(m) > m0)] = 0.0
@@ -59,7 +62,7 @@ for name, (title, max_at) in names.items():
             **arg_1d,
         )
 
-        ts = np.arange(tmin, tmax) * dts / tau
+        ts = np.arange(d_tmin, d_tmax) * dts / tau
 
         f_avg = np.log(np.mean(np.square(f_data), axis=1))
         Avg.axes_position.plot(ts, f_avg, label="$\\forall m$")
@@ -76,13 +79,13 @@ for name, (title, max_at) in names.items():
         F_at_filtered.axes_position.plot(phi, (- m0 * phi - const) / w0, linestyle='--', c='r', linewidth=2, alpha=1)
         F_at_filtered.axes_position.text(np.pi, 4.5, f"$\\omega = {w0 / (Omega_i * tau):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
 
-        if (names == "Ea"):
+        if (named_props == "Ea"):
             y0 = -20.2
             x0 = f_tmin
             gamma = 0.6
             Avg.axes_position.plot(ts, -20.2 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
             Avg.axes_position.text(6.0, -15.5, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
-        if (names == "Er"):
+        if (named_props == "Er"):
             gamma = 0.35
             Avg.axes_position.plot(ts, -19.8 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
             Avg.axes_position.text(5.5, -16, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
@@ -90,7 +93,7 @@ for name, (title, max_at) in names.items():
         fig.tight_layout()
         fig.tight_layout()
 
-        filename = f"{res_dir}/Increment_{names}_r={r:.2f}"
+        filename = f"{res_dir}/Increment_{named_props}_r={r:.2f}"
         print(filename)
 
         fig.savefig(f"{filename}.png")

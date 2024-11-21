@@ -8,7 +8,7 @@ nrows=1
 fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-res_dir = f"{params_path}/Spectras_filtered"
+res_dir = f"{params_path}/Spectra_filtered"
 mkdir(res_dir)
 
 Omega_i = B0 / mi_me
@@ -26,7 +26,7 @@ def kw_lines(ax):
     ax.plot([-mmax, +mmax], [w0 / tau, w0 / tau], linestyle="-", color="r", linewidth=0.5)
 
 
-for name, (title, max_at, max_mw) in names.items():
+for name, (title, max_at, max_mw) in named_props:
     for r in r_range:
         F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"${title}(\\phi,\,t,\,r = {r:.2f})$", r, max_at)
         F_at.draw(add_cbar=True)

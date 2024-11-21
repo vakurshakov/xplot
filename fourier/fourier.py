@@ -1,28 +1,32 @@
-#!/usr/bin/env python3
-
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from lib_common import *
 
-names = {
-    "Bz":   ("\\delta B_z", 0.02,  150),
-    "Er":   ("E_r",         0.02,  80),
-    "Ea":   ("E_{\\phi}",   0.02,  80),
-    "Jr_e": ("J_r^e",       0.02,  100),
-    "Ja_e": ("J_{\\phi}^e", 0.02,  100),
-    "Jr_i": ("J_r^i",       0.002, 5),
-    "Ja_i": ("J_{\\phi}^i", 0.002, 5),
-}
+named_props = [
+    ["b",   ("\\delta B_z", 0.02,  150)],
+    ["er",  ("E_r",         0.02,  40 )],
+    ["ea",  ("E_{\\phi}",   0.02,  40 )],
+    ["jri", ("J_r^i",       0.002, 5  )],
+    ["jai", ("J_{\\phi}^i", 0.002, 5  )],
+    ["jre", ("J_r^e",       0.02,  100)],
+    ["jae", ("J_{\\phi}^e", 0.02,  100)],
+]
 
-r_range = reduce_array(np.arange(1.00, 3.76, 0.25), rank, proc)
+r0    = 10
+rmax  = 15
+rstep = 2.5
+r_range = reduce_array(np.arange(r0, rmax + rstep, rstep))
 
-tmin_data = int(0 * tau / dts)
-tmin = int(3 * tau / dts)
-tmax = int(9 * tau / dts)
+data_tmin = int(0 * tau / dts)
+d_tmin = int(0 * tau / dts)
+d_tmax = int(3 * tau / dts)
+f_tmin = d_tmin * dts / tau
+f_tmax = d_tmax * dts / tau
 
-f_tmin = tmin * dts / tau
-f_tmax = tmax * dts / tau
+mmax = 50
+wmax = 0.02
+
 args_phit = {
     "ylabel": "$t,~\\tau$",
     "ylim": (f_tmin, f_tmax),
@@ -34,8 +38,6 @@ args_phit = {
     "xticklabels": ["$0$", "$\\pi / 2$", "$\\pi$", "$3 \\pi / 2$", "$2 \\pi$"],
 }
 
-mmax = 50
-wmax = 0.02
 args_mw = {
     "ylabel": "$\\omega,~\\omega_{pe}$",
     "ylim": (-wmax, +wmax),
@@ -46,45 +48,47 @@ args_mw = {
     "xticks": np.linspace(-mmax, +mmax, 5),
 }
 
-m0 = 3
-w0 = 0.68
 Omega_i = B0 / mi_me
 Omega_e = B0
 omega0_pi = 1 / np.sqrt(mi_me)
+print("Omega_i:", Omega_i, "[w_pe]", "Omega_e:", Omega_e, "[w_pe]", "omega0_pi:", omega0_pi, "[w_pe]")
 
-print(f"w: {w0:4f} [1/tau], {w0 / tau:4f} [omega_pe], {w0 / (Omega_i * tau):4f} [Omega_i]")
+def draw_common_lines_mw(ax, r=r0):
+    # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
+    text_mult = 1.1
+    text_size = ssmol * 0.6
 
-def draw_common_lines_mw(ax):
-    ax.plot([-m0, -m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=0.5)
-    ax.plot([+m0, +m0], [-wmax, +wmax], linestyle="--", color="r", linewidth=0.5)
+    ms = range(0, 5)
+    for m in ms:
+        ax.plot([-mmax, +mmax], [m*Omega_i, m*Omega_i], linestyle="--", color="r", linewidth=0.5)
 
-    for m in range(1, 5):
-        ax.plot([-mmax, +mmax], [+m * Omega_i, +m * Omega_i], linestyle="--", color="r", linewidth=0.5)
+        if (m*Omega_i > wmax and m > ms[1]) or m == ms[-1]:
+            ax.text(mmax / 2, m*Omega_i * text_mult, "$m \\Omega_i$", color="r", fontsize=text_size)
+            break
 
-    ax.plot([-mmax, +mmax], [+Omega_e, +Omega_e], linestyle="--", color="r", linewidth=0.5)
-    ax.plot([-mmax, +mmax], [+0.0, +0.0], linestyle="--", color="r", linewidth=0.5)
+    if (Omega_e < wmax):
+        ax.plot([-mmax, +mmax], [Omega_e, Omega_e], linestyle="--", color="r", linewidth=0.5)
+        ax.text(-mmax / 2, Omega_e * text_mult, "$Omega_e$", color="r", fontsize=text_size)
 
     # drift
-    ms = np.linspace(-mmax, +mmax, 100)
+    # ms = np.linspace(-mmax, +mmax, 100)
+    # ax.plot(ms, (ms / r) * np.sqrt(T_i / mi_me), linestyle='--', c='r', linewidth=0.8, alpha=1)
 
-    # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
-    # ax.plot(ms, ms * (+0.419) * Omega_i, linestyle='-', c='r', linewidth=0.8, alpha=1)
-    # ax.plot(ms, ms * (+0.200) * Omega_i, linestyle='-', c='r', linewidth=0.8, alpha=1)
-    # ax.plot(ms, ms * (+1.505) * Omega_i, linestyle='-', c='r', linewidth=0.8, alpha=1)
-    # ax.plot(ms, (ms / r) * omega0_pi * np.sqrt(T_i / mi_me), linestyle='--', c='r', linewidth=0.8, alpha=1)
 
 def prepare_field_phit(ax, name, title, r, max_phit):
-    F_at = Field(f"{params_path}/Data1D/{name}_phi_t_r={r:.2f}", ax, None, signed_cmap, (-max_phit, +max_phit))
+    F_at = Field(f"{params_path}/Collection/{name}_phit_r={r:.2f}", ax, (0.0, 2 * np.pi, f_tmin, f_tmax), signed_cmap, (-max_phit, +max_phit))
     F_at.set_axes_args(title=title, **args_phit)
 
     F_at.data = np.load(f"{F_at.path_to_file}.npy", allow_pickle=True)
-    F_at.data = F_at.data[(tmin - tmin_data):(tmax - tmin_data),:]
-    F_at.boundaries = (0.0, 2 * np.pi, f_tmin, f_tmax)
 
-    if ("Bz" in F_at.path_to_file):
+    assert ((d_tmax - d_tmin) < F_at.data.shape[0]), f"Incorrect fourier window is chosen: d_tmin {d_tmin}, d_tmax {d_tmax}, F_at.data.shape {F_at.data.shape[0]}"
+    F_at.data = F_at.data[(d_tmin - data_tmin):(d_tmax - data_tmin),:]
+
+    if ("B_z" in F_at.axes_args["title"]):
         F_at.data -= F_at.data[0,:]
 
     return F_at
+
 
 def prepare_field_mw(ax, title, r, max_mw, data):
     F_mw = Field(None, ax, None, signed_cmap, (0.0, +max_mw))
@@ -93,6 +97,5 @@ def prepare_field_mw(ax, title, r, max_mw, data):
     F_mw.data, w, k = fourier_transform(data)
     m = np.round(k)
 
-    # the minimum of all min(m) is 56
     F_mw.boundaries = (min(m), max(m), min(w), max(w))
     return F_mw, w, m
