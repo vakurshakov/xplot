@@ -25,10 +25,13 @@ def process_collection(parse, named_arrays, output, shape=None):
     for name, arr in named_arrays:
         gathered_list = comm.gather(arr, root=0)
         if (rank != 0):
-            return
+            continue
 
         arr = aggregate_array(gathered_list)
         if shape != None:
             arr = np.reshape(arr, shape)
 
-        np.save(output(name), arr)
+        filename = output(name)
+        print(f"Saving {filename}.png")
+
+        np.save(filename, arr)
