@@ -39,5 +39,5 @@ for r, map in rmap:
         shape=((tmax - tmin), len(map[0])))
 
     # Clearing the arrays, after collection
-    for _, arr in named_arrays:
-        arr = []
+    for i, (_1, _2) in enumerate(named_arrays):
+        named_arrays[i][1] = []
