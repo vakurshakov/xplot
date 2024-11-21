@@ -108,8 +108,8 @@ def update_data(t):
         dot = (fr * br + fz * bz)
         return np.divide(dot, b.data, where=(b.data > 1e-3), out=np.zeros_like(b.data))
 
-    _er = get_parsed_field(ep, "E", "Y", "x", t)
-    _ez = get_parsed_field(ep, "E", "Y", "z", t)
+    _er = get_parsed_field(ep.path_to_file, "E", "Y", "x", t)
+    _ez = get_parsed_field(ep.path_to_file, "E", "Y", "z", t)
     ep.data = agg(ep.data, align(_er, _ez))
 
     # ions
@@ -117,8 +117,8 @@ def update_data(t):
     prri.data = agg(prri.data, get_parsed_scalar(prri, t))
     pzzi.data = agg(pzzi.data, get_parsed_scalar(pzzi, t))
 
-    _vri = get_parsed_field(vpi, "E", "Y", "x", t)
-    _vzi = get_parsed_field(vti, "E", "Y", "z", t)
+    _vri = get_parsed_field(vpi.path_to_file, "E", "Y", "x", t)
+    _vzi = get_parsed_field(vti.path_to_file, "E", "Y", "z", t)
     _vpi = align(_vri, _vzi)
     vpi.data = agg(vpi.data, _vpi)
 
@@ -131,8 +131,8 @@ def update_data(t):
     prre.data = agg(prre.data, get_parsed_scalar(prre, t))
     pzze.data = agg(pzze.data, get_parsed_scalar(pzze, t))
 
-    _vre = get_parsed_field(vpe, "E", "Y", "x", t)
-    _vze = get_parsed_field(vte, "E", "Y", "z", t)
+    _vre = get_parsed_field(vpe.path_to_file, "E", "Y", "x", t)
+    _vze = get_parsed_field(vte.path_to_file, "E", "Y", "z", t)
     _vpe = align(_vre, _vze)
     vpe.data = agg(vpe.data, _vpe)
 
@@ -203,13 +203,13 @@ if __name__ == "__main__":
     pzzi.set_axes_args(title="$\\Pi_{zz} / (n T)$")
 
     b = magnetic_field("Y", subplot(fig, gs, 0, 1), "$|B|$")
-    br = get_parsed_field(b, "B", "Y", "x", 0)
-    bz = get_parsed_field(b, "B", "Y", "z", 0)
+    br = get_parsed_field(b.path_to_file, "B", "Y", "x", 0)
+    bz = get_parsed_field(b.path_to_file, "B", "Y", "z", 0)
     b.data = np.hypot(br, bz)
 
     res_dir = f"{params_path}/Other"
     mkdir(res_dir)
 
     offset = 100
-    t0 = int(25 * offset) # * (2 / 3))
+    t0 = int(25 * offset)
     plot_baligned_info(t0)

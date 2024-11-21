@@ -58,6 +58,14 @@ mkdir(f"./{params_path}/Video")
 def agg(to_agg, data):
     return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
 
+def dump(name, t, units, data):
+    prefix = f"{params_path}/Dump"
+    mkdir(prefix)
+    with open(f"{prefix}/{name}_{int(t * dts)}.txt", "w") as f:
+        f.write(f"Grid {name} [{units}]\n")
+        for i, d in enumerate(data):
+            f.write(f"{i} {d}\n")
+
 # Berendeev's data reading utilities
 def get_prefix(t, restarts=restart_timesteps, prefixes=prefixes):
     i = 0
@@ -103,7 +111,7 @@ def parse_file(path, offset=0):
 # Timestep consistency utils
 def is_correct_timestep(t):
     plane = "Z"
-    fields_file = f"{get_prefix(t)}/Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}_{str(t).zfill(4)}"
+    fields_file = get_fields_file(t, plane)
     fields_file_bytesize = 4 * (2 + data_shape[plane][0] * data_shape[plane][1] * len(fields))
     return os.path.isfile(fields_file) and os.path.getsize(fields_file) == fields_file_bytesize
 
@@ -281,7 +289,7 @@ def magnetic_field(plane, subplot=None, title=None):
     DB = B0
     cmap = unsigned_cmap if plane == 'Z' else signed_cmap
     vmap = (0, B0) if plane == 'Z' else (B0 - DB, B0 + DB)
-    field = Field(get_fields_file(plane), subplot, None, cmap, vmap)
+    field = Field(get_fields_path(plane), subplot, None, cmap, vmap)
     if title != None:
         generate_info(field, plane, title)
     return field
