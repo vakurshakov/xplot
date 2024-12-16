@@ -11,7 +11,7 @@ def plot_baligned_info(t):
 
     xc = data_shape["Y"][0] // 2
     zc = data_shape["Y"][1] // 2
-    xl = xc + 25
+    xl = xc + 1
     w1 = -1 # 4
     w2 = +1
     xs1 = select_magnetic_line(xl + w1)
@@ -30,28 +30,28 @@ def plot_baligned_info(t):
         ax.plot(-(xs2 - xc) * dx, zs * dz, color="black", linewidth=2)
 
     zs = np.arange(0, data_shape["Y"][1])
-    e_l = average_over_magnetic_tube(ep.data, zs, xs1, xs2, xc) / T_e
+    e_l = average_over_magnetic_tube(ep.data, zs, xs1, xs2, xc) # / T_e
 
     ni_l = average_over_magnetic_tube(ni.data, zs, xs1, xs2, xc)
     vpi_l = average_over_magnetic_tube(vpi.data, zs, xs1, xs2, xc) # / np.sqrt(T_e / mi_me)
     vti_l = average_over_magnetic_tube(vti.data, zs, xs1, xs2, xc) # / np.sqrt(T_e / mi_me)
-    prri_l = average_over_magnetic_tube(prri.data, zs, xs1, xs2, xc) / T_e
-    pzzi_l = average_over_magnetic_tube(pzzi.data, zs, xs1, xs2, xc) / T_e
+    prri_l = average_over_magnetic_tube(prri.data, zs, xs1, xs2, xc) # / T_e
+    pzzi_l = average_over_magnetic_tube(pzzi.data, zs, xs1, xs2, xc) # / T_e
 
     ne_l = -average_over_magnetic_tube(ne.data, zs, xs1, xs2, xc)
     vpe_l = -average_over_magnetic_tube(vpe.data, zs, xs1, xs2, xc) # / np.sqrt(T_e)
     vte_l = average_over_magnetic_tube(vte.data, zs, xs1, xs2, xc) # / np.sqrt(T_e)
-    prre_l = average_over_magnetic_tube(prre.data, zs, xs1, xs2, xc) / T_e
-    pzze_l = average_over_magnetic_tube(pzze.data, zs, xs1, xs2, xc) / T_e
+    prre_l = average_over_magnetic_tube(prre.data, zs, xs1, xs2, xc) # / T_e
+    pzze_l = average_over_magnetic_tube(pzze.data, zs, xs1, xs2, xc) # / T_e
 
     n_zero_tolerance = 1e-3
-    # vpi_l = np.divide(vpi_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(vpi_l))
-    # vti_l = np.divide(vti_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(vti_l))
+    vpi_l = np.divide(vpi_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(vpi_l))
+    vti_l = np.divide(vti_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(vti_l))
     prri_l = np.divide(prri_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(prri_l))
     pzzi_l = np.divide(pzzi_l, ni_l, where=(ni_l > n_zero_tolerance), out=np.zeros_like(pzzi_l))
 
-    # vpe_l = np.divide(vpe_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(vpe_l))
-    # vte_l = np.divide(vte_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(vte_l))
+    vpe_l = np.divide(vpe_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(vpe_l))
+    vte_l = np.divide(vte_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(vte_l))
     prre_l = np.divide(prre_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(prre_l))
     pzze_l = np.divide(pzze_l, ne_l, where=(ne_l > n_zero_tolerance), out=np.zeros_like(pzze_l))
 
@@ -96,19 +96,29 @@ def plot_baligned_info(t):
     # n.axes_position.set_xlim(0, 50)
     print(np.max(phi_l))
 
+    # dump("E_p", "me c wpe / e", int(t * dts / dt), e_l)
+    # dump("Phi", "me c^2 / e", int(t * dts / dt), phi_l)
+    # dump("IonsDensity", "n0", int(t * dts / dt), ni_l)
+    # dump("IonsVelocity_pe", "c", int(t * dts / dt), vpi_l)
+    # dump("IonsVelocity_te", "c", int(t * dts / dt), vti_l)
+    # dump("IonsTemperature_rr", "n0 me c^2", int(t * dts / dt), prri_l)
+    # dump("IonsTemperature_zz", "n0 me c^2", int(t * dts / dt), pzzi_l)
+    # dump("ElectronsDensity", "n0", int(t * dts / dt), ne_l)
+    # dump("ElectronsVelocity_pe", "c", int(t * dts / dt), vpe_l)
+    # dump("ElectronsVelocity_te", "c", int(t * dts / dt), vte_l)
+    # dump("ElectronsTemperature_rr", "n0 me c^2", int(t * dts / dt), prre_l)
+    # dump("ElectronsTemperature_zz", "n0 me c^2", int(t * dts / dt), pzze_l)
+
     annotate_x(ep.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
+    print(f"{int(t * dts / dt)} [dt] {int(t)} [dts] {t * dts / tau:.3f} [tau]")
 
     fig.tight_layout()
-    fig.savefig(f"{res_dir}/baligned_info_{str(t // offset).zfill(4)}_xl{xl-xc}_w{w2-w1}.png")
+    fig.savefig(f"{res_dir}/baligned_info_t{str(t).zfill(4)}dts_xl{xl-xc}_w{w2-w1}.png")
 
 def update_data(t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
     if not timestep_should_be_processed(t, filename, False):
         return
-
-    def align(fr, fz):
-        dot = (fr * br + fz * bz)
-        return np.divide(dot, b.data, where=(b.data > 1e-3), out=np.zeros_like(b.data))
 
     _er = get_parsed_field(ep.path_to_file, "E", "Y", "x", t)
     _ez = get_parsed_field(ep.path_to_file, "E", "Y", "z", t)
@@ -141,36 +151,6 @@ def update_data(t):
     _vtre = _vre - _vpe * np.divide(br, b.data, where=(b.data > 1e-3), out=np.zeros_like(b.data))
     _vtze = _vze - _vpe * np.divide(bz, b.data, where=(b.data > 1e-3), out=np.zeros_like(b.data))
     vte.data = agg(vte.data, np.hypot(_vtre, _vtze))
-
-
-def select_magnetic_line(xl):
-    xs = data_shape["Y"][0]
-    zs = data_shape["Y"][1]
-    xc = xs // 2
-    zc = zs // 2
-
-    # 2 * np.pi can be removed since comparison is relative
-    b_f0 = np.sum(bz[zc,xc:xl] * np.arange(0, xl - xc))
-
-    xmap = np.zeros(zs, dtype=np.int32)
-    for z in np.arange(0, zs):
-        b_fz = 0
-        for x in np.arange(xc, xs):
-            b_fz += bz[z, x] * (x - xc)
-            xmap[z] = x
-
-            if (b_fz >= b_f0):
-                break
-    return xmap
-
-def average_over_magnetic_tube(data, zs, xs1, xs2, xc):
-    f_l = np.zeros(data_shape["Y"][1])
-    for z in zs:
-        rs = (np.arange(xs1[z], xs2[z] + 1) - xc) * dx
-        area = cumulative_trapezoid(2 * np.pi * rs, rs, initial=0)[-1]
-        f_l[z] += cumulative_trapezoid(data[z, xs1[z]:(xs2[z] + 1)] * (2 * np.pi * rs), rs, initial=0)[-1] / area
-        f_l[z] += cumulative_trapezoid(data[z, (2 * xc - (xs2[z] + 1)):(2 * xc - xs1[z])] * (2 * np.pi * rs), rs, initial=0)[-1] / area
-    return f_l / 2
 
 
 if __name__ == "__main__":
@@ -213,5 +193,12 @@ if __name__ == "__main__":
     mkdir(res_dir)
 
     offset = 100
-    t0 = int(25 * offset)
-    plot_baligned_info(t0)
+    ts = [
+        int(2.0 * tau / dts),
+        int(3.0 * tau / dts),
+        int(3.5 * tau / dts),
+        int(4.0 * tau / dts),
+    ]
+
+    for t in ts:
+        plot_baligned_info(t)

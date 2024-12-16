@@ -58,13 +58,16 @@ mkdir(f"./{params_path}/Video")
 def agg(to_agg, data):
     return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
 
-def dump(name, t, units, data):
+def dump(name, units, t, data):
     prefix = f"{params_path}/Dump"
     mkdir(prefix)
-    with open(f"{prefix}/{name}_{int(t * dts)}.txt", "w") as f:
+    with open(f"{prefix}/{name}_{t}.txt", "w") as f:
         f.write(f"Grid {name} [{units}]\n")
         for i, d in enumerate(data):
             f.write(f"{i} {d}\n")
+
+def sliding_average(linear, w=5):
+    return np.convolve(linear, np.ones(w) / w, mode='valid')
 
 # Berendeev's data reading utilities
 def get_prefix(t, restarts=restart_timesteps, prefixes=prefixes):
@@ -142,42 +145,6 @@ def find_correct_timestep(t, t_range):
         print(f"{t_c:4d} [dts]", f"{t_c * dts / tau:6.3f}", "[tau]")
         return t_c
     return t_c
-
-# Figure utilities
-def subplot(fig, gs, x, y):
-    return fig.add_subplot(gs[x + y * gs.ncols])
-
-bbox = dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.25')
-
-def annotate_x(axis, annotation, x=0.5, y=1, size=big, ha="center"):
-    axis.annotate(
-        annotation,
-        xy=(x, y),
-        xytext=(0, 1),
-        xycoords="axes fraction",
-        textcoords="offset points",
-        ha=ha,
-        va="baseline",
-        size=size,
-        bbox=bbox
-    )
-
-def annotate_y(axis, annotation):
-    axis.annotate(
-        annotation,
-        xy=(0, 0.5),
-        xytext=(-axis.yaxis.labelpad - 1, 0),
-        xycoords=axis.yaxis.label,
-        textcoords="offset points",
-        ha="right",
-        va="center",
-        rotation=90,
-        size=big,
-    )
-
-def sliding_average(linear, w=5):
-    return np.convolve(linear, np.ones(w) / w, mode='valid')
-
 
 # MPI utilities
 def create_t_range(tmin, tmax, offset):
@@ -299,3 +266,43 @@ def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cm
     if title != None:
         generate_info(field, plane, title)
     return field
+
+# magnetic-tubes
+def select_magnetic_line(bz, xl):
+    xs = data_shape["Y"][0]
+    zs = data_shape["Y"][1]
+    xc = xs // 2
+    zc = zs // 2
+
+    # 2 * np.pi can be removed since comparison is relative
+    b_f0 = np.sum(bz[zc,xc:xl] * np.arange(0, xl - xc))
+
+    xmap = np.zeros(zs, dtype=np.int32)
+    for z in np.arange(0, zs):
+        b_fz = 0
+        for x in np.arange(xc, xs):
+            b_fz += bz[z, x] * (x - xc)
+            xmap[z] = x
+
+            if (b_fz >= b_f0):
+                break
+    return xmap
+
+def curvature_coefficients(bz_normalized, xl, xs1, xs2):
+    cos_map = np.ones_like(bz_normalized[:,xl])
+    for z, x in enumerate(0.5 * (xs1 + xs2)):
+        cos_map[z] = bz_normalized[z,int(x)]
+    return cos_map
+
+def average_over_magnetic_tube(data, zs, xs1, xs2, xc):
+    f_l = np.zeros(data_shape["Y"][1])
+    for z in zs:
+        rs = (np.arange(xs1[z], xs2[z] + 1) - xc) * dx
+        area = cumulative_trapezoid(2 * np.pi * rs, rs, initial=0)[-1]
+        f_l[z] += cumulative_trapezoid(data[z, xs1[z]:(xs2[z] + 1)] * (2 * np.pi * rs), rs, initial=0)[-1] / area
+        f_l[z] += cumulative_trapezoid(data[z, (2 * xc - (xs2[z] + 1)):(2 * xc - xs1[z])] * (2 * np.pi * rs), rs, initial=0)[-1] / area
+    return f_l / 2
+
+def align(fr, fz, br, bz, b):
+    dot = (fr * br + fz * bz)
+    return np.divide(dot, b, where=(b > 1e-3), out=np.zeros_like(b))

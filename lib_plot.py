@@ -1,3 +1,5 @@
+from math import log10, floor
+
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -98,6 +100,57 @@ def set_ssmol(new_ssmol):
     global ssmol
     ssmol = new_ssmol
 
+def subplot(fig, gs, x, y):
+    return fig.add_subplot(gs[x + y * gs.ncols])
+
+bbox = dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.25')
+
+def annotate_x(axis, annotation, x=0.5, y=1, size=big, ha="center", bbox=bbox):
+    axis.annotate(
+        annotation,
+        xy=(x, y),
+        xytext=(0, 1),
+        xycoords="axes fraction",
+        textcoords="offset points",
+        ha=ha,
+        va="baseline",
+        size=size,
+        bbox=bbox
+    )
+
+def annotate_y(axis, annotation):
+    axis.annotate(
+        annotation,
+        xy=(0, 0.5),
+        xytext=(-axis.yaxis.labelpad - 1, 0),
+        xycoords=axis.yaxis.label,
+        textcoords="offset points",
+        ha="right",
+        va="center",
+        rotation=90,
+        size=big,
+    )
+
+def figure(ncols=1, nrows=1, width_ratios=None, height_ratios=None):
+    fig = plt.figure(figsize=(8 * ncols * 1.2, 8 * nrows * 1.2))
+
+    if width_ratios == None:
+        width_ratios = [1] * ncols
+    if height_ratios == None:
+        height_ratios = [1] * nrows
+
+    gs = plt.GridSpec(
+        ncols=ncols,
+        nrows=nrows,
+        width_ratios=width_ratios,
+        height_ratios=height_ratios,
+        figure=fig
+    )
+
+    return fig, gs
+
+def find_exp(number):
+    return int(floor(log10(abs(number))))
 
 class Field:
     def __init__(
