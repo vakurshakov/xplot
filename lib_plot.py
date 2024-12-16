@@ -100,7 +100,7 @@ def set_ssmol(new_ssmol):
     global ssmol
     ssmol = new_ssmol
 
-def subplot(fig, gs, x, y):
+def subplot(fig, gs, x=0, y=0):
     return fig.add_subplot(gs[x + y * gs.ncols])
 
 bbox = dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.25')

@@ -212,7 +212,7 @@ def get_parsed_field(path, name, plane, comp, t, prefix=None):
     elif (plane == "X" and comp == "y") or \
          (plane == "Y" and comp in "xy"):
         data = parse_file(file, fields.index(name + comp))
-        data[:, :(data_shape[plane][0] // 2)] *= -1
+        # data[:, :(data_shape[plane][0] // 2)] *= -1
         return data
     elif plane == "Z":
         fx = parse_file(file, fields.index(name + "x"))
