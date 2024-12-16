@@ -224,6 +224,7 @@ class Field:
         cbar_pad = 0.2
         cbar_orientation = "vertical"
         cbar_ticks_num = 5
+        cbar_exponential = False
         for name, arg in kwargs.items():
             if name == "add_cbar":
                 add_cbar = arg
@@ -233,6 +234,8 @@ class Field:
                 cbar_pad = arg
             if name == "cbar_ticks_num":
                 cbar_ticks_num = arg
+            if name == "cbar_exponential":
+                cbar_exponential = arg
 
         if (self.cbar != None and self.vmin_vmax != None) or not add_cbar:
             return
@@ -251,62 +254,10 @@ class Field:
             ticks=np.linspace(vmin, vmax, cbar_ticks_num),
         )
 
-    def draw_box(self, **kwargs):
-        if self.boundaries == None:
-            self.boundaries = (0, self.data.shape[0], 0, self.data.shape[1])
-
-        if self.vmin_vmax == None:
-            vmin = self.data.min()
-            vmax = self.data.max()
-        else:
-            vmin = self.vmin_vmax[0]
-            vmax = self.vmin_vmax[1]
-
-        for name, arg in kwargs.items():
-            if name == "zdir":
-                zdir = arg
-
-        if zdir == 'x':
-            y = np.arange(0, 153, 1) - 153 // 2
-            z = np.arange(0, 103, 1)
-            y, z = np.meshgrid(y, z)
-            x = np.ones(self.data.shape) * (- 153 // 2)
-
-        elif zdir == 'y':
-            x = np.arange(0, 153, 1) - 153 // 2
-            z = np.arange(0, 103, 1)
-            x, z = np.meshgrid(x, z)
-            y = np.ones(self.data.shape) * (+ 153 // 2)
-
-        elif zdir == 'z':
-            x = y = np.arange(0, 153, 1) - 153 // 2
-            x, y = np.meshgrid(x, y)
-            z = np.ones(self.data.shape) * 0
-
-        ls = col.LightSource()
-
-        # creating RGBA equivalent of our data
-        rgba = ls.shade(
-            self.data,
-            cmap=self.cmap,
-            vmin=vmin,
-            vmax=vmax
-        )
-
-        # zeroing alpha-channel by hand
-        rgba_epsilon = 1e-6
-        rgba[np.abs(self.data) < rgba_epsilon, 3] = 0.1
-
-        self.im = self.axes_position.plot_surface(
-            x, y, z,
-            facecolors=rgba,
-            cmap=self.cmap,
-            rstride=1,
-            cstride=1,
-            linewidth=1,
-            antialiased=False
-        )
-
+        if cbar_exponential:
+            self.cbar.formatter.set_powerlimits((0, 0))
+            self.cbar.ax.yaxis.get_offset_text().set_visible(False)
+            annotate_x(self.cbar.ax, "$\\times\\,10^{" + str(find_exp(self.vmin_vmax[1])) + "}$", y=1.02, size=(ssmol * 0.8), bbox=None)
 
 
     def clear(self):
