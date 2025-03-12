@@ -18,10 +18,6 @@ pressures = {
     "Paa": "Pyy"
 }
 
-def get_parsed_file(t, path, prefix=None):
-    p = get_prefix(t) if prefix == None else prefix
-    t_str = str(int(t)).zfill(4)
-    return f"{p}/{path}_{t_str}"
 
 def get_fields_path(plane):
     return f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
