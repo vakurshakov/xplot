@@ -38,7 +38,7 @@ arg_anno = {
         width=1,
         headwidth=6
     ),
-    "fontsize": ssmol,
+    "fontsize": ticksize,
     "horizontalalignment": "left",
     "bbox": bbox,
 }

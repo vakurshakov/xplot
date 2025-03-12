@@ -25,13 +25,13 @@ def plot_spatial_beta():
         bz.cbar = None
         bz.draw_info()
         bz.axes_position.set_aspect(1)
-        annotate_x(bz.axes_position, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.18, size=smol)
+        annotate_x(bz.axes_position, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.18, size=labelsize)
 
         beta.draw(add_cbar=True)
         beta.cbar = None
         beta.draw_info()
         beta.axes_position.set_aspect(1)
-        annotate_x(beta.axes_position, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.18, size=smol)
+        annotate_x(beta.axes_position, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.18, size=labelsize)
 
     ts = np.arange(0, int(time / dts) + 1, 1) * dts / tau
     b_min = np.load(f"{res_dir}/b_min_t.npy", allow_pickle=True)

@@ -9,9 +9,9 @@ from plot_utils import *
 plt.rcParams.update({"text.usetex": True, "axes.formatter.use_mathtext": True})
 
 # Font sizes
-big = 36
-smol = 34
-ssmol = 30
+titlesize = 36
+labelsize = 34
+ticksize  = 30
 
 class Field:
     def __init__(
@@ -85,7 +85,7 @@ class Field:
 
         cbar_side = "right" if (cbar_orientation == "vertical") else "bottom"
         cax = divider.append_axes(cbar_side, size="5%", pad=cbar_pad)
-        cax.tick_params(labelsize=ssmol, pad=10)
+        cax.tick_params(labelsize=ticksize, pad=10)
 
         self.cbar = fig.colorbar(
             self.im,
@@ -97,7 +97,7 @@ class Field:
         if cbar_exponential:
             self.cbar.formatter.set_powerlimits((0, 0))
             self.cbar.ax.yaxis.get_offset_text().set_visible(False)
-            annotate_x(self.cbar.ax, "$\\times\\,10^{" + str(find_exp(self.vmin_vmax[1])) + "}$", y=1.02, size=(ssmol * 0.8), bbox=None)
+            annotate_x(self.cbar.ax, "$\\times\\,10^{" + str(find_exp(self.vmin_vmax[1])) + "}$", y=1.02, size=(ticksize * 0.8), bbox=None)
 
 
     def clear(self):
@@ -121,11 +121,11 @@ class Field:
 
     def draw_info(self, **kwargs):
         ax = self.axes_position
-        ax.tick_params(labelsize=ssmol, pad=8)
+        ax.tick_params(labelsize=ticksize, pad=8)
 
         for name, arg in {**self.axes_args, **kwargs}.items():
             if name == "title":
-                ax.set_title(arg, fontsize=big, pad=0, y=1.05)
+                ax.set_title(arg, fontsize=titlesize, pad=0, y=1.05)
             elif name == "xlim":
                 ax.set_xlim(arg)
             elif name == "ylim":
@@ -133,11 +133,11 @@ class Field:
             elif name == "zlim":
                 ax.set_zlim(arg)
             elif name == "xlabel":
-                ax.set_xlabel(arg, fontsize=smol, labelpad=12)
+                ax.set_xlabel(arg, fontsize=labelsize, labelpad=12)
             elif name == "ylabel":
-                ax.set_ylabel(arg, fontsize=smol, labelpad=10)
+                ax.set_ylabel(arg, fontsize=labelsize, labelpad=10)
             elif name == "zlabel":
-                ax.set_zlabel(arg, fontsize=smol, labelpad=16)
+                ax.set_zlabel(arg, fontsize=labelsize, labelpad=16)
             elif name == "xticks":
                 ax.set_xticks(arg)
             elif name == "yticks":
@@ -145,10 +145,10 @@ class Field:
             elif name == "zticks":
                 ax.set_zticks(arg)
             elif name == "xticklabels":
-                ax.set_xticklabels(arg, fontsize=smol)
+                ax.set_xticklabels(arg, fontsize=labelsize)
             elif name == "yticklabels":
-                ax.set_yticklabels(arg, fontsize=smol)
+                ax.set_yticklabels(arg, fontsize=labelsize)
             elif name == "zticklabels":
-                ax.set_zticklabels(arg, fontsize=smol)
+                ax.set_zticklabels(arg, fontsize=labelsize)
             else:
                 raise RuntimeError("No parameter named " + name)

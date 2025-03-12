@@ -25,7 +25,7 @@ def plot_electric_potential():
         er.draw_info()
         ax = er.axes_position
 
-        annotate_x(ax, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.19, size=smol)
+        annotate_x(ax, f"$t = {t:.1f}\,\\tau$", y=0.9, x=0.19, size=labelsize)
 
         e_avg = phi_averaged(time_average(lambda t0: get_parsed_field(electric_field("Z"), "E", "Z", "", t0), tt, 2)[0], R_MAP)
         phi.axes_position.plot(rs, -cumulative_trapezoid(e_avg, rs, dx, initial=0) / T_i, label=f"$t = {t:.1f}\,\\tau$", linewidth=2)
@@ -33,8 +33,8 @@ def plot_electric_potential():
     v = (0, 4)
     ax = phi.axes_position
     phi.draw_info(xlim=(0, 30), ylim=v, yticks=np.linspace(*v, 5))
-    ax.set_xlabel("$r,~c/\\omega_{pe}$", fontsize=smol)
-    ax.legend(fontsize=ssmol, loc="upper left")
+    ax.set_xlabel("$r,~c/\\omega_{pe}$", fontsize=labelsize)
+    ax.legend(fontsize=ticksize, loc="upper left")
     ax.grid()
 
     fig.tight_layout()

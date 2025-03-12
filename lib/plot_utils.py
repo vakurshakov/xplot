@@ -6,24 +6,24 @@ import matplotlib.ticker as ticker
 from matplotlib.gridspec import GridSpec
 
 # Utilities to set font sizes externally
-def set_big(new_big):
-    global big
-    big = new_big
+def set_titlesize(new_titlesize):
+    global titlesize
+    titlesize = new_titlesize
 
-def set_smol(new_smol):
-    global smol
-    smol = new_smol
+def set_labelsize(new_labelsize):
+    global labelsize
+    labelsize = new_labelsize
 
-def set_ssmol(new_ssmol):
-    global ssmol
-    ssmol = new_ssmol
+def set_ticksize(new_ticksize):
+    global ticksize
+    ticksize = new_ticksize
 
 def subplot(fig, gs, x=0, y=0):
     return fig.add_subplot(gs[x + y * gs.ncols])
 
 bbox = dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.25')
 
-def annotate_x(axis, annotation, x=0.5, y=1, size=big, ha="center", bbox=bbox):
+def annotate_x(axis, annotation, x=0.5, y=1, size=titlesize, ha="center", bbox=bbox):
     axis.annotate(
         annotation,
         xy=(x, y),
@@ -46,7 +46,7 @@ def annotate_y(axis, annotation):
         ha="right",
         va="center",
         rotation=90,
-        size=big,
+        size=titlesize,
     )
 
 def figure(ncols=1, nrows=1, width_ratios=None, height_ratios=None):

@@ -18,7 +18,7 @@ def plot_currents(t):
         diag.draw(add_cbar=True)
         diag.draw_info()
 
-    fig.suptitle(f"$t / \\tau = {t * dts / tau:.3f}$", x=0.5, bbox=bbox, fontsize=smol)
+    fig.suptitle(f"$t / \\tau = {t * dts / tau:.3f}$", x=0.5, bbox=bbox, fontsize=labelsize)
     fig.tight_layout()
 
     print(filename, t, "[dts]", f"{t * dts / tau:.3f}", "[tau]")

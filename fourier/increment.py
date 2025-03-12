@@ -77,18 +77,18 @@ for name, (title, max_at) in named_props:
         phi = np.linspace(0, 2 * np.pi)
         const = -11
         F_at_filtered.axes_position.plot(phi, (- m0 * phi - const) / w0, linestyle='--', c='r', linewidth=2, alpha=1)
-        F_at_filtered.axes_position.text(np.pi, 4.5, f"$\\omega = {w0 / (Omega_i * tau):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+        F_at_filtered.axes_position.text(np.pi, 4.5, f"$\\omega = {w0 / (Omega_i * tau):.2f}\,\\Omega_i$", fontsize=labelsize, bbox=bbox)
 
         if (named_props == "Ea"):
             y0 = -20.2
             x0 = f_tmin
             gamma = 0.6
             Avg.axes_position.plot(ts, -20.2 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
-            Avg.axes_position.text(6.0, -15.5, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+            Avg.axes_position.text(6.0, -15.5, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=labelsize, bbox=bbox)
         if (named_props == "Er"):
             gamma = 0.35
             Avg.axes_position.plot(ts, -19.8 + 2 * gamma * (ts - f_tmin), linestyle='--', c='r', linewidth=2)
-            Avg.axes_position.text(5.5, -16, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=smol, bbox=bbox)
+            Avg.axes_position.text(5.5, -16, f"$\\Gamma = {(gamma / (Omega_i * tau)):.2f}\,\\Omega_i$", fontsize=labelsize, bbox=bbox)
 
         fig.tight_layout()
         fig.tight_layout()

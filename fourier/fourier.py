@@ -56,7 +56,7 @@ print("Omega_i:", Omega_i, "[w_pe]", "Omega_e:", Omega_e, "[w_pe]", "omega0_pi:"
 def draw_common_lines_mw(ax, r=r0):
     # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
     text_mult = 1.1
-    text_size = ssmol * 0.6
+    text_size = ticksize * 0.6
 
     ms = range(0, 5)
     for m in ms:

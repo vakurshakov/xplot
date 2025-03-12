@@ -86,8 +86,8 @@ def plot_baligned_info(t):
     prri.axes_position.plot(zs * dz, prre_l, zs * dz, prri_l, linewidth=2)
     pzzi.axes_position.plot(zs * dz, pzze_l, zs * dz, pzzi_l, linewidth=2)
 
-    phi.axes_position.legend(fontsize=0.8 * ssmol, loc="upper left")
-    ni.axes_position.legend(fontsize=0.8 * ssmol, loc="upper left")
+    phi.axes_position.legend(fontsize=0.8 * ticksize, loc="upper left")
+    ni.axes_position.legend(fontsize=0.8 * ticksize, loc="upper left")
 
     for diag in [phi, ni, vpi, vti, prri, pzzi]:
         diag.draw_info()

@@ -38,7 +38,7 @@ def plot_baligned_electric_potential(t):
     ax = phi.axes_position
     ax.plot(zs * dz, e_l, label="$E_{\\|}(z) / T_i$", linewidth=3)
     ax.plot(zs * dz, -cumulative_trapezoid(e_l, zs * dx, initial=0), label="$\\varphi(z) / T_i$", linewidth=3)
-    ax.legend(fontsize=0.8 * ssmol, loc="upper left")
+    ax.legend(fontsize=0.8 * ticksize, loc="upper left")
     phi.draw_info()
 
     annotate_x(ep.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
