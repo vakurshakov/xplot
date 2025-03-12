@@ -23,4 +23,3 @@ def get_prefix(t, restarts, prefixes):
         if (t > restart):
             i += 1
     return prefixes[i]
-

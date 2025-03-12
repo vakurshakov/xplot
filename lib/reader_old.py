@@ -19,17 +19,22 @@ pressures = {
 }
 
 
+def get_filepath(t: int, path: str, prefix=None):
+    p = get_prefix(t) if prefix == None else prefix
+    t_str = str(t).zfill(4)
+    return f"{p}/{path}_{t_str}"
+
 def get_fields_path(plane):
     return f"Fields/Diag2D/FieldPlane{plane}_{slices[plane][-1]}"
 
 def get_fields_file(t, plane="Z", prefix=None):
-    return get_parsed_file(t, get_fields_path(plane), prefix)
+    return get_filepath(t, get_fields_path(plane), prefix)
 
 def get_particles_path(sort, diag_name, plane):
     return f"Particles/{sort}/Diag2D/{diag_name}Plane{plane}_{slices[plane][-1]}"
 
 def get_particles_file(sort, diag_name, plane, t, prefix=None):
-    return get_parsed_file(t, get_particles_path(sort, diag_name, plane), prefix)
+    return get_filepath(t, get_particles_path(sort, diag_name, plane), prefix)
 
 def parse_file(path, offset=0):
     file = open(path, "rb")
@@ -49,7 +54,7 @@ def parse_file(path, offset=0):
     return raw.reshape((nx, ny)).transpose()
 
 def get_parsed_field(path, name, plane, comp, t, prefix=None):
-    file = get_parsed_file(t, path, prefix)
+    file = get_filepath(t, path, prefix)
     if comp == 'z':
         return parse_file(file, fields.index(name + comp))
     elif (plane == "X" and comp == "x"):
