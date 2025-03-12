@@ -5,6 +5,11 @@ import matplotlib.colors as col
 import matplotlib.ticker as ticker
 from matplotlib.gridspec import GridSpec
 
+# Font sizes
+titlesize = 36
+labelsize = 34
+ticksize  = 30
+
 # Utilities to set font sizes externally
 def set_titlesize(new_titlesize):
     global titlesize

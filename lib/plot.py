@@ -8,11 +8,6 @@ from plot_utils import *
 
 plt.rcParams.update({"text.usetex": True, "axes.formatter.use_mathtext": True})
 
-# Font sizes
-titlesize = 36
-labelsize = 34
-ticksize  = 30
-
 class Field:
     def __init__(
         self,
