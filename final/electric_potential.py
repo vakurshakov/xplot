@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from lib_common import *
-from plot_fields import *
+from final import *
 
 from scipy.integrate import cumulative_trapezoid
 

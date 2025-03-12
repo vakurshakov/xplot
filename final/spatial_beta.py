@@ -1,11 +1,7 @@
 #!/opt/anaconda3/bin/python3
 ##/usr/bin/python3
 
-from lib_common import *
-from plot_fields import *
-from plot_particles import *
-
-B0 = 0.191
+from final import *
 
 def plot_spatial_beta():
     ts = [ 1, 3, 4.47 ]

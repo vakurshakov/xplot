@@ -1,7 +1,8 @@
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from lib_common import *
+sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
+
+from lib.common import *
 
 named_props = [
     ["b",   ("\\delta B_z", 0.02,  150)],
