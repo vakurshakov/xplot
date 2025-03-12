@@ -16,36 +16,33 @@ rank = comm.Get_rank()
 proc = comm.Get_size()
 
 
-from lib_plot import *
-from lib_xy_rphi import *
+from plot import *
+from xy_rphi import *
 
-# from nx_140_np_200.parameters import *
-# from nx_140_np_1000.parameters import *
-from nx_140_np_1000_glinskiy.parameters import *
+from tools.configuration import *
 
 # Data layout in fields files
 fields = [ "Ex", "Ey", "Ez", "Bx", "By", "Bz" ]
 
 # Pressures remap
 pressures = {
-    "Prr": "Pxx",
-    "Paa": "Pyy"
+  "Prr": "Pxx",
+  "Paa": "Pyy"
 }
 
 sorts = [ "Electrons", "Ions" ]
 
 boundaries = {
-    'X': (-0.5 * Ny * dy, +0.5 * Ny * dy, 0, Nz * dz),
-    'Y': (-0.5 * Nx * dx, +0.5 * Nx * dx, 0, Nz * dz),
-    'Z': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy),
+  'X': (-0.5 * Ny * dy, +0.5 * Ny * dy, 0, Nz * dz),
+  'Y': (-0.5 * Nx * dx, +0.5 * Nx * dx, 0, Nz * dz),
+  'Z': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy),
 }
 
 data_shape = {
-    'X': (Ny + 3, Nz + 3),
-    'Y': (Nx + 3, Nz + 3),
-    'Z': (Nx + 3, Ny + 3),
+  'X': (Ny, Nz),
+  'Y': (Nx, Nz),
+  'Z': (Nx, Ny),
 }
-
 
 COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape['Z'][0], 0, data_shape['Z'][1]))
 
