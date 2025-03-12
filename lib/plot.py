@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as col
 import matplotlib.ticker as ticker
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.gridspec import GridSpec
 
 fancy = True
 if (fancy):

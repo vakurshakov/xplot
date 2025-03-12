@@ -1,4 +1,4 @@
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../lib"))
 
-from lib_common import *
+from lib.common import *
