@@ -4,10 +4,10 @@ import numpy as np
 
 from scipy.integrate import cumulative_trapezoid
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
 from plot import *
-from xy_rphi import *
+from reader import *
 from mpi_utils import *
 from file_utils import *
 
