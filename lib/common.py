@@ -20,16 +20,7 @@ boundaries = {
     'Z': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy),
 }
 
-# Shape of the data stored in files [cells]
-data_shape = {
-    'X': (Ny, Nz),
-    'Y': (Nx, Nz),
-    'Z': (Nx, Ny),
-}
-
-COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape['Z'][0], 0, data_shape['Z'][1]))
-
-mkdir(f"./{params_path}/Video")
+mkdir(f"{params_path}/Video")
 
 def agg(to_agg, data):
     return data + (to_agg if np.any(to_agg) else np.zeros_like(data))
