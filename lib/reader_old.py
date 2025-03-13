@@ -5,8 +5,8 @@ import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
-from xy_rphi import *
-from file_utils import get_prefix
+from xplot.lib.xy_rphi import *
+from xplot.lib.file_utils import get_prefix
 from tools.configuration import *
 
 # Data layout in fields files

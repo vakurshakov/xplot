@@ -1,20 +1,13 @@
 import os
 import sys
 import numpy as np
-
 from scipy.integrate import cumulative_trapezoid
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
-this = os.path.dirname(__file__)
-
-sys.path.append(this)
-sys.path.append(os.path.join(this, "../../"))
-
-from plot import *
-from reader import *
-from mpi_utils import *
-from file_utils import *
-from data_consistency import *
+from xplot.lib.plot import *
+from xplot.lib.reader import *
+from xplot.lib.mpi_utils import *
 
 # Boundaries to all possible graphs (bx, ex, by, ey) [c / wpe]
 boundaries = {

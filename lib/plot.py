@@ -1,10 +1,9 @@
 import numpy as np
 
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from plot_utils import *
+from xplot.lib.plot_utils import *
 
 # Main class for plotting
-# @todo Should be better parametrized
+# TODO: Should be better parametrized
 
 plt.rcParams.update({"text.usetex": True, "axes.formatter.use_mathtext": True})
 
