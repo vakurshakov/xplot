@@ -11,8 +11,8 @@ from xplot.lib.mpi_utils import *
 
 # Boundaries to all possible graphs (bx, ex, by, ey) [c / wpe]
 boundaries = {
-    'X': (-0.5 * Ny * dy, +0.5 * Ny * dy, 0, Nz * dz),
-    'Y': (-0.5 * Nx * dx, +0.5 * Nx * dx, 0, Nz * dz),
+    'X': (-0.5 * Ny * dy, +0.5 * Ny * dy, -0.5 * Nz * dz, +0.5 * Nz * dz),
+    'Y': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Nz * dz, +0.5 * Nz * dz),
     'Z': (-0.5 * Nx * dx, +0.5 * Nx * dx, -0.5 * Ny * dy, +0.5 * Ny * dy),
 }
 
@@ -30,9 +30,9 @@ def generate_info(field: Field, title: str = None):
         return
 
     axes_args = {
-        'X': [ "$(y, z, x=0)$", 'y', 'z' ],
-        'Y': [ "$(x, z, y=0)$", 'x', 'z' ],
-        'Z': [ "$(x, y, z=100)$", 'x', 'y' ]
+        'X': [ "$(y, z, x=5)$", 'y', 'z' ],
+        'Y': [ "$(x, z, y=5)$", 'x', 'z' ],
+        'Z': [ "$(x, y, z=5)$", 'x', 'y' ]
     }
 
     plane = get(field.path_to_file, "region.plane")
