@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as col
 import matplotlib.ticker as ticker
 from matplotlib.gridspec import GridSpec
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Font sizes
 titlesize = 36

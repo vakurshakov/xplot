@@ -18,6 +18,9 @@ data_shape = {
 
 COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape['Z'][0], 0, data_shape['Z'][1]))
 
+def get_formatted_time(t: int):
+    return str(t).zfill(len(str(Nt)))
+
 def get_diag_path(diag: dict | None, t: int, prefix: str = None):
     if diag == None:
         return None
@@ -38,16 +41,16 @@ def get_diag_path(diag: dict | None, t: int, prefix: str = None):
 
     suffix = ""
 
-    if diag["diagnostic"] in fields_diagnostics:
+    if get(diag, "field"):
         suffix += get(diag, "field")
-    elif diag["diagnostic"] in particles_diagnostics:
+    elif get(diag, "particles") and get(diag, "moment"):
         suffix += f"{get(diag, "particles")}/{get(diag, "moment")}"
 
     if get(diag, "region.type") == "2D":
         suffix += get_suffix_2D(diag)
 
     p = get_prefix(t, restarts, prefixes) if prefix == None else prefix
-    t_str = str(t).zfill(len(str(Nt)))
+    t_str = get_formatted_time(t)
     return f"{p}/{suffix}/{t_str}"
 
 def parse_file(diag: dict, t: int, prefix: str = None):
@@ -59,11 +62,11 @@ def parse_file(diag: dict, t: int, prefix: str = None):
         ds = list(data_shape[get(diag, "region.plane")])
 
     count = np.prod(ds)
-    if diag["diagnostic"] in fields_diagnostics and "comp" not in diag:
-        ds.append(3)
-        count *= ds[-1]
+    # if diag["diagnostic"] in fields_diagnostics and "comp" not in diag:
+    ds.append(3)
+    count *= ds[-1]
 
-    with open(get_diag_path(diag, t) + ".bin", "rb") as file:
+    with open(get_diag_path(diag, t, prefix) + ".bin", "rb") as file:
         raw = np.fromfile(
             file,
             dtype=np.float32,
@@ -76,23 +79,28 @@ def get_parsed_field_cyl(diag, comp, t, prefix: str = None):
     plane = get(diag, "region.plane")
 
     if comp == 'z':
-        return parse_file(diag, t)
+        return parse_file(diag, t, prefix)
     elif (plane == "X" and comp == "x"):
         # we return A_phi, thus we should invert the second half in y
-        data = parse_file(diag, t)
+        data = parse_file(diag, t, prefix)
         data[:, (data.shape[1] // 2 + 1):] *= -1
         return data
     elif (plane == "X" and comp == "y") or \
          (plane == "Y" and comp in "xy"):
-        data = parse_file(diag, t)
+        data = parse_file(diag, t, prefix)
         return data
     elif plane == "Z":
-        fx = parse_file(diag, t)
-        fy = parse_file(diag, t)
+        fx = parse_file(diag, t, prefix)
+        fy = parse_file(diag, t, prefix)
         return vx_vy_to_vr_va(fx, fy, COS, SIN)
 
-def get_parsed_field(diag, t, prefix: str = None):
-    return get_parsed_field_cyl(diag, t, prefix)
+def get_parsed_field(diag: dict, comp: str, t: int, prefix: str = None):
+    comps = {
+        'x': 0,
+        'y': 1,
+        'z': 2,
+    }
+    return parse_file(diag, t, prefix)[:,:,comps.get(comp)]
 
-def get_parsed_scalar(diag, t, prefix: str = None):
+def get_parsed_scalar(diag: dict, t: int, prefix: str = None):
     return parse_file(diag, t, prefix)

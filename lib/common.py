@@ -24,21 +24,26 @@ def agg(to_agg, data):
 def sliding_average(linear, w=5):
     return np.convolve(linear, np.ones(w) / w, mode='valid')
 
-# `Fields` generation
-def generate_info(diag, plane, title):
+# `Fields` generation utils
+def generate_info(field: Field, title: str = None):
+    if title == None:
+        return
+
     axes_args = {
         'X': [ "$(y, z, x=0)$", 'y', 'z' ],
         'Y': [ "$(x, z, y=0)$", 'x', 'z' ],
         'Z': [ "$(x, y, z=100)$", 'x', 'y' ]
     }
 
-    diag.boundaries = boundaries[plane]
+    plane = get(field.path_to_file, "region.plane")
+
+    field.boundaries = boundaries[plane]
     bx = boundaries[plane][0] + buff * dx
     ex = boundaries[plane][1] - buff * dx
     by = boundaries[plane][2] + (buff * dy if plane == 'Z' else 0)
     ey = boundaries[plane][3] - (buff * dy if plane == 'Z' else 0)
 
-    diag.set_axes_args(
+    field.set_axes_args(
         title=title + axes_args[plane][0],
         xlim=(bx, ex),
         ylim=(by, ey),
@@ -50,22 +55,16 @@ def generate_info(diag, plane, title):
 
 def electric_field(plane, subplot=None, title=None):
     vmap = (-2e-2, +2e-2)
-    field = Field(get_fields_path(plane), subplot, None, signed_cmap, vmap)
-    if title != None:
-        generate_info(field, plane, title)
+    field = Field(find_diag(f"FieldView.E.{plane}"), subplot, None, signed_cmap, vmap)
+    generate_info(field, title)
     return field
 
-def magnetic_field(plane, subplot=None, title=None):
-    DB = B0
-    cmap = unsigned_cmap if plane == 'Z' else signed_cmap
-    vmap = (0, B0) if plane == 'Z' else (B0 - DB, B0 + DB)
-    field = Field(get_fields_path(plane), subplot, None, cmap, vmap)
-    if title != None:
-        generate_info(field, plane, title)
+def magnetic_field(plane, cmap, vmap, subplot=None, title=None):
+    field = Field(find_diag(f"FieldView.B.{plane}"), subplot, None, cmap, vmap)
+    generate_info(field, title)
     return field
 
-def particles_field(sort, diag_name, plane, subplot=None, title=None, v=None, cmap=signed_cmap):
-    field = Field(get_particles_path(sort, diag_name, plane), subplot, None, cmap, v)
-    if title != None:
-        generate_info(field, plane, title)
+def particles_field(name, cmap=None, v=None, subplot=None, title=None):
+    field = Field(find_diag(name), subplot, None, signed_cmap if cmap == None else cmap, v)
+    generate_info(field, title)
     return field

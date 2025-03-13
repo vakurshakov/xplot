@@ -8,13 +8,12 @@ from tools.configuration import *
 # Timestep data consistency utils
 
 def get_test_file(t: int):
-    byte_size = 4 * Nx * Ny  # old: 2 + Nx * Ny * 6
     t_str = str(t).zfill(len(str(Nt)))
 
     for _, dirs, _ in os.walk(params_path):
         for d in dirs:
-            if d == "E" or d == "B":
-                return (f"{d}/{t_str}", byte_size)
+            if "E_PlaneZ" in d or "B_PlaneZ" in d:
+                return (f"{params_path}/{d}/{t_str}.bin", 4 * (3 * Nx * Ny))
             # elif d in sorts:
     return None
 
@@ -26,7 +25,7 @@ def is_correct_timestep(t):
 
 def check_consistency(tmin, tmax):
     def format_range(t1, t2):
-        return f"({t1}, {t2}) [dts] or ({t1 * dts / tau}, {t2 * dts / tau}) [tau]"
+        return f"({t1}, {t2}) [dts]"
 
     for t in range(tmin, tmax):
         if not is_correct_timestep(t):
@@ -36,7 +35,7 @@ def check_consistency(tmin, tmax):
     return
 
 def timestep_should_be_processed(t, filename, skip_processed=True):
-    msg = f"{filename} {t} [dts] {t * dts / tau:.3f} [tau]"
+    msg = f"{"/".join(filename.split("/")[-2:])} {t} [dts]"
     if not is_correct_timestep(t):
         print(msg, "Data is incorrect, skipping")
         return False
@@ -51,6 +50,6 @@ def find_correct_timestep(t, t_range):
         if not is_correct_timestep(t_c):
             print(f"Warning! Timestep {t_c} is incorrect, first previous correct step will be used.")
             continue
-        print(f"{t_c:4d} [dts]", f"{t_c * dts / tau:6.3f}", "[tau]")
+        print(f"{t_c:4d} [dts]")
         return t_c
     return t_c
