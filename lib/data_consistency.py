@@ -13,7 +13,7 @@ def get_test_file(t: int):
     for _, dirs, _ in os.walk(params_path):
         for d in dirs:
             if "E_PlaneZ" in d or "B_PlaneZ" in d:
-                return (f"{params_path}/{d}/{t_str}.bin", 4 * (3 * Nx * Ny))
+                return (f"{params_path}/{d}/{t_str}", 4 * (3 * Nx * Ny))
             # elif d in sorts:
     return None
 

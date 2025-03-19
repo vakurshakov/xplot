@@ -30,13 +30,13 @@ def get_diag_path(diag: dict | None, t: int, prefix: str = None):
         pos = get(diag, "region.position")
         fill = -1
 
-        if plane == "X": fill = Nx
-        elif plane == "Y": fill = Ny
-        elif plane == "Z": fill = Nz
+        if plane == "X": pos = round(pos / dx); fill = Nx
+        elif plane == "Y": pos = round(pos / dy); fill = Ny
+        elif plane == "Z": pos = round(pos / dz); fill = Nz
 
         s = ""
         s += f"_Plane{plane}"
-        s += f"_{str(pos).zfill(len(str(fill)))}cwpe"
+        s += f"_{str(pos).zfill(len(str(fill)))}"
         return s
 
     suffix = ""
@@ -62,11 +62,14 @@ def parse_file(diag: dict, t: int, prefix: str = None):
         ds = list(data_shape[get(diag, "region.plane")])
 
     count = np.prod(ds)
-    # if diag["diagnostic"] in fields_diagnostics and "comp" not in diag:
+
+    # Should follow C-style ordering
+    ds.reverse()
     ds.append(3)
+
     count *= ds[-1]
 
-    with open(get_diag_path(diag, t, prefix) + ".bin", "rb") as file:
+    with open(get_diag_path(diag, t, prefix), "rb") as file:
         raw = np.fromfile(
             file,
             dtype=np.float32,
