@@ -8,7 +8,7 @@ def mkdir(dirname):
     rank = comm.Get_rank()
 
     if not os.path.exists(dirname) and rank == 0:
-        os.mkdir(dirname)
+        os.makedirs(dirname, exist_ok=True)
 
 def dump(prefix, name, units, t, data):
     mkdir(prefix)
