@@ -1,11 +1,11 @@
 #!/bin/bash
 
 diagnostics=(
-    Fields
-    Particles
-    Currents
+    fields
+    currents
+    particles
 )
 
 for d in ${diagnostics[*]}; do
-    mpirun -np 8 $d
+    mpiexec -np 8 ./plot/$d.py
 done

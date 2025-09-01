@@ -11,9 +11,9 @@ shift 1
 if [[ $# == 0 ]]; then
     diagnostics=(
         Fields
+        Currents
         Info_Ions
         Info_Electrons
-        Currents
     )
 else
     diagnostics=$@
