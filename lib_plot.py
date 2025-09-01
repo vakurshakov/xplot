@@ -170,6 +170,7 @@ class Field:
         self.cbar = None
         self.axes_args = {}
         self.im = None
+        self.title = None
 
     def read_data(self, t: int, **kwargs):
         data_shape = (
@@ -285,7 +286,7 @@ class Field:
 
         for name, arg in {**self.axes_args, **kwargs}.items():
             if name == "title":
-                ax.set_title(arg, fontsize=big, pad=0, y=1.05)
+                self.title = ax.set_title(arg, fontsize=big, pad=0, y=1.05)
             elif name == "xlim":
                 ax.set_xlim(arg)
             elif name == "ylim":
