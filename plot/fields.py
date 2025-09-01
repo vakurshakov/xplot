@@ -2,41 +2,35 @@
 
 from plot import *
 
-def plot_fields3(t):
-    filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
+def plot_fields3(t: int):
+    filename = f"{res_dir}/{get_formatted_time(t // offset)}.png"
     if not timestep_should_be_processed(t, filename, False):
         return
 
-    def get_parsed_fields_xy(fr, fa, name):
-        return (
-            get_parsed_field(fr[0], name, "Y", "x", t),
-            get_parsed_field(fa[0], name, "Y", "y", t),
-            *get_parsed_field(fr[1], name, "Z", "", t))
+    # TODO: Should be moved into `xplot.plot.Field` or abstracted in some form (cyl, dec problem)
+    er[0].data = get_parsed_field(er[0].path_to_file, "x", t)
+    ea[0].data = get_parsed_field(ea[0].path_to_file, "y", t)
+    ez[0].data = get_parsed_field(ez[0].path_to_file, "z", t)
 
-    er[0].data, ea[0].data, er[1].data, ea[1].data = get_parsed_fields_xy(er, er, "E")
-    br[0].data, ba[0].data, br[1].data, ba[1].data = get_parsed_fields_xy(br, br, "B")
+    er[1].data = get_parsed_field(er[1].path_to_file, "x", t)
+    ea[1].data = get_parsed_field(ea[1].path_to_file, "y", t)
+    ez[1].data = get_parsed_field(ez[1].path_to_file, "z", t)
 
-    ba[0].data = parse_file(get_parsed_file(t, ba[0].path_to_file), 1)
-    ba[0].data -= B0A
-    br[1].data -= B0R
+    br[0].data = get_parsed_field(br[0].path_to_file, "x", t)
+    ba[0].data = get_parsed_field(ba[0].path_to_file, "y", t)
+    bz[0].data = get_parsed_field(bz[0].path_to_file, "z", t)
 
-    def get_parsed_fields_z(fz, name):
-        return (
-            get_parsed_field(fz[0], name, planes[0], "z", t),
-            get_parsed_field(fz[1], name, planes[1], "z", t))
-
-    ez[0].data, ez[1].data = get_parsed_fields_z(ez, "E")
-    bz[0].data, bz[1].data = get_parsed_fields_z(bz, "B")
-
-    bz[0].data = np.sqrt(np.square(bz[0].data) + np.square(br[0].data))
+    br[1].data = get_parsed_field(br[1].path_to_file, "x", t)
+    ba[1].data = get_parsed_field(ba[1].path_to_file, "y", t)
+    bz[1].data = get_parsed_field(bz[1].path_to_file, "z", t)
 
     for diag in er + ea + ez + br + ba + bz:
         diag.axes_position.set_aspect(1)
         diag.draw(add_cbar=True)
         diag.draw_info()
 
-    ba[0].title.set_bbox(bbox)
-    bz[0].title.set_bbox(bbox)
+    # annotate_x(er[0].axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
+    annotate_x(er[0].axes_position, "$t = {" f"{t * dts:.3f}" "}$", y=1.2)
 
     fig.suptitle("$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=0.99, bbox=bbox, fontsize=big)
     fig.tight_layout(rect=(0, 0, 1, 0.99))
@@ -55,8 +49,8 @@ if __name__ == "__main__":
     ncols=4
     nrows=3
 
-    fig = plt.figure(figsize=(8 * ncols * 1.2, 8 * nrows * 1.2))
-    gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
+    fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1.1))
+    gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1, 1, 1, 1], figure=fig)
 
     er = []
     ea = []
@@ -66,36 +60,27 @@ if __name__ == "__main__":
     ba = []
     bz = []
 
-    planes = planes[1:]
+    ea.append(electric_field("Y", subplot(fig, gs, 0, 0), "$E_x$"))
+    er.append(electric_field("Y", subplot(fig, gs, 1, 0), "$E_y$"))
+    ez.append(electric_field("Y", subplot(fig, gs, 2, 0), "$E_z$"))
 
-    er.append(electric_field("Y", subplot(fig, gs, 0, 0), "$E_r$"))
-    ea.append(electric_field("Y", subplot(fig, gs, 0, 1), "$E_{\\phi}$"))
-    ez.append(electric_field("Y", subplot(fig, gs, 0, 2), "$E_z$"))
+    ea.append(electric_field("Z", subplot(fig, gs, 0, 1), "$E_x$"))
+    er.append(electric_field("Z", subplot(fig, gs, 1, 1), "$E_y$"))
+    ez.append(electric_field("Z", subplot(fig, gs, 2, 1), "$E_z$"))
 
-    er.append(electric_field("Z", subplot(fig, gs, 1, 0), "$E_r$"))
-    ea.append(electric_field("Z", subplot(fig, gs, 1, 1), "$E_{\\phi}$"))
-    ez.append(electric_field("Z", subplot(fig, gs, 1, 2), "$E_z$"))
+    ba.append(magnetic_field("Y", signed_cmap, (  -2e-2,   +2e-2), subplot(fig, gs, 0, 2), "$B_x$"))
+    br.append(magnetic_field("Y", signed_cmap, (  -2e-2,   +2e-2), subplot(fig, gs, 1, 2), "$B_y$"))
+    bz.append(magnetic_field("Y", signed_cmap, (B0-2e-2, B0+2e-2), subplot(fig, gs, 2, 2), "$B_z$"))
 
-    vmap = (-2e-2, +2e-2)
-    br.append(magnetic_field("Y", subplot(fig, gs, 2, 0), "$B_r$", vmap))
-    ba.append(magnetic_field("Y", subplot(fig, gs, 2, 1), "$B_y$", vmap))
-    bz.append(magnetic_field("Y", subplot(fig, gs, 2, 2), "$|B|$", (-B0, +B0)))
-
-    br.append(magnetic_field("Z", subplot(fig, gs, 3, 0), "$B_r$", vmap))
-    ba.append(magnetic_field("Z", subplot(fig, gs, 3, 1), "$B_{\\phi}$", vmap))
-    bz.append(magnetic_field("Z", subplot(fig, gs, 3, 2), "$B_z$", (0, B0), unsigned_cmap))
-
-    br[0].vmin_vmax = (-B0, +B0)
-
-    bz[0].cmap = unsigned_cmap
-    bz[0].vmin_vmax = (0, 2 * B0)
+    ba.append(magnetic_field("Z", signed_cmap, (  -2e-2,   +2e-2), subplot(fig, gs, 0, 3), "$B_x$"))
+    br.append(magnetic_field("Z", signed_cmap, (  -2e-2,   +2e-2), subplot(fig, gs, 1, 3), "$B_y$"))
+    bz.append(magnetic_field("Z", signed_cmap, (B0-2e-2, B0+2e-2), subplot(fig, gs, 2, 3), "$B_z$"))
 
     res_dir = f"{params_path}/Fields"
     mkdir(res_dir)
 
-    offset = 25
-    t0 = 0
-    t_range = create_t_range(t0, int(time / dts), offset)
+    offset = int(dts / dt)
+    t_range = create_t_range(0, Nt, offset)
 
     for t in t_range:
         plot_fields3(t)

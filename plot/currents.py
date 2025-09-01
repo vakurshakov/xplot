@@ -21,8 +21,10 @@ def plot_currents(t):
         diag.draw(add_cbar=True)
         diag.draw_info()
 
-    fig.suptitle("$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=0.99, bbox=bbox, fontsize=big)
-    fig.tight_layout(rect=(0, 0, 1, 0.99))
+    fig.suptitle(f"$t / \\tau = {t * dts / tau:.3f}$", x=0.5, bbox=bbox, fontsize=labelsize)
+    fig.tight_layout()
+
+    print(filename, t, "[dts]", f"{t * dts / tau:.3f}", "[tau]")
     fig.savefig(filename)
 
     for diag in [ ja_xi, ja_xe, ja_yi, ja_ye, ja_zi, ja_ze ]:

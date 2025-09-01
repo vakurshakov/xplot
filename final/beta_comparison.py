@@ -10,9 +10,9 @@ nrows=4
 fig = plt.figure(figsize=(8 * ncols * 1.18, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-set_big(54)
-set_smol(50)
-set_ssmol(47)
+set_titlesize(54)
+set_labelsize(50)
+set_ticksize(47)
 
 t_range = np.array([1, 4, 6, 9]) * int(tau / dts)  # dts
 
@@ -39,7 +39,7 @@ for i, t in enumerate(t_range):
         diag.draw_info()
         diag.axes_position.set_aspect(1)
         diag.axes_position.grid(alpha=0.3)
-        annotate_x(diag.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
+        annotate_x(diag.axes_position, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, labelsize, "right")
 
 # beta calculation
 t_range = np.array([1, 2, 4, 6]) * int(tau / dts)  # dts
@@ -80,12 +80,12 @@ for i, t in enumerate(t_range):
     ax.grid(alpha=0.3)
     beta.draw_info()
 
-    ax.legend(bbox_to_anchor=(0.5, 0.30), fontsize=ssmol)
+    ax.legend(bbox_to_anchor=(0.5, 0.30), fontsize=ticksize)
 
-    annotate_x(ax, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, smol, "right")
+    annotate_x(ax, f"$t = {t * dts / tau:.0f}\,\\tau$", 0.95, 0.9, labelsize, "right")
 
 fig.tight_layout()
 fig.tight_layout()
 
-# p_l.axes_position.legend(fontsize=ssmol, loc="upper right")
+# p_l.axes_position.legend(fontsize=ticksize, loc="upper right")
 fig.savefig(f"{res_dir}/figure3.pdf")

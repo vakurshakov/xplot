@@ -88,7 +88,7 @@ annotate_x(
   "$m_i / m_e = 100$",
   x=x0,
   y=0.7,
-  size=ssmol
+  size=ticksize
 )
 annotate_x(
   ax,
@@ -96,14 +96,14 @@ annotate_x(
   "$\\Delta x = 0.5~c/\\omega_{pe} \\approx 2~\\rho_e$",
   x=x0,
   y=0.4,
-  size=ssmol,
+  size=ticksize,
 )
 annotate_x(
   ax,
   "$\\mathbf{B} = 0.2\,\\mathbf{e}_z$",
   x=x0,
   y=0.1,
-  size=ssmol
+  size=ticksize
 )
 ax.annotate("$R = 15$", (r0 * np.cos(5 * np.pi / 4) - 1, r0 * np.sin(5 * np.pi / 4) - 1), (-45, -20), **arg_anno)
 ax.annotate("$R = 120$", (rd * np.cos(np.pi / 4) - 1, rd * np.sin(np.pi / 4) - 1), (-0, 30), **arg_anno)

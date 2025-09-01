@@ -48,18 +48,18 @@ def plot_forces(t):
     ax.plot(rs, ja_e.data * bz.data, label="$J^e_{\\phi} B_z$", linewidth=2)
     ax.plot(avg2_rs, avg2(-(np.gradient(prr_e.data, dx) + np.divide(prr_e.data - paa_e.data, rs)) - n_e.data * er.data + ja_e.data * bz.data), label="res. force", linewidth=2, linestyle="--", color="red")
 
-    annotate_x(forces_i.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.12, size=smol)
+    annotate_x(forces_i.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.12, size=labelsize)
 
     v = (-0.002, +0.001)
     forces_i.draw_info(xlim=(0, 30), ylim=v, yticks=np.linspace(*v, 7))
-    forces_i.axes_position.legend(fontsize=ssmol * 0.8, loc="lower right")
+    forces_i.axes_position.legend(fontsize=ticksize * 0.8, loc="lower right")
     forces_i.axes_position.grid()
-    forces_i.axes_position.set_title("Forces on ions", fontsize=smol)
+    forces_i.axes_position.set_title("Forces on ions", fontsize=labelsize)
 
     forces_e.draw_info(xlim=(0, 30), ylim=v, yticks=np.linspace(*v, 7))
-    forces_e.axes_position.legend(fontsize=ssmol * 0.8, loc="lower right")
+    forces_e.axes_position.legend(fontsize=ticksize * 0.8, loc="lower right")
     forces_e.axes_position.grid()
-    forces_e.axes_position.set_title("Forces on electrons", fontsize=smol)
+    forces_e.axes_position.set_title("Forces on electrons", fontsize=labelsize)
 
     fig.tight_layout()
 

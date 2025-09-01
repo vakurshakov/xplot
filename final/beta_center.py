@@ -8,9 +8,9 @@ nrows=1
 fig = plt.figure(figsize=(8 * ncols * 1.18, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-set_big(42)
-set_smol(40)
-set_ssmol(36)
+set_titlesize(42)
+set_labelsize(40)
+set_ticksize(36)
 
 plot = Field(None, subplot(fig, gs, 0, 0), boundaries, unsigned_cmap, (0, +0.02))
 
@@ -58,7 +58,7 @@ ax.annotate(
     **arg_anno,
 )
 
-ax.legend(fontsize=ssmol, framealpha=1)
+ax.legend(fontsize=ticksize, framealpha=1)
 ax.grid(alpha=0.3)
 plot.draw_info()
 

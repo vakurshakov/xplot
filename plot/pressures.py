@@ -117,7 +117,7 @@ for t in t_range:
         if (diag.axes_args != None):
             diag.draw_info()
 
-    fig.suptitle("$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", x=0.515, size=big, bbox=bbox)
+    fig.suptitle("$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", x=0.515, size=titlesize, bbox=bbox)
 
     fig.tight_layout()
     fig.tight_layout()

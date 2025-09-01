@@ -28,12 +28,12 @@ def plot_electric_potential(t):
     ax.plot(rs, er.data / T_i, label="$E_r(r) / T_i$")
     ax.plot(rs, -cumulative_trapezoid(er.data, rs, dx, initial=0) / T_i, label="$\\varphi(r) / T_i$")
 
-    annotate_x(ax, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2, size=smol)
+    annotate_x(ax, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2, size=labelsize)
 
     v = (-2, 10)
     er.draw_info(ylim=v, yticks=np.linspace(*v, 7))
-    ax.set_xlabel("$r,~c/\\omega_{pe}$", fontsize=ssmol)
-    ax.legend(fontsize=ssmol * 0.8, loc="upper left")
+    ax.set_xlabel("$r,~c/\\omega_{pe}$", fontsize=ticksize)
+    ax.legend(fontsize=ticksize * 0.8, loc="upper left")
     ax.grid()
 
     fig.tight_layout()

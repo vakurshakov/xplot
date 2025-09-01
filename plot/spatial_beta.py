@@ -15,7 +15,7 @@ def plot_spatial_beta(t):
 
     beta.data = 2 * (prr_i.data + prr_e.data) / (B0 * B0)
 
-    fig.suptitle(f"$t / \\tau = {t * dts / tau:.3f}$", x=0.51, bbox=bbox, fontsize=smol)
+    fig.suptitle(f"$t / \\tau = {t * dts / tau:.3f}$", x=0.51, bbox=bbox, fontsize=labelsize)
 
     bz.draw(add_cbar=True)
     bz.draw_info()

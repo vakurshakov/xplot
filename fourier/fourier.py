@@ -1,7 +1,8 @@
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from lib_common import *
+sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
+
+from lib.common import *
 
 named_props = [
     ["b",   ("\\delta B_z", 0.02,  150)],
@@ -56,7 +57,7 @@ print("Omega_i:", Omega_i, "[w_pe]", "Omega_e:", Omega_e, "[w_pe]", "omega0_pi:"
 def draw_common_lines_mw(ax, r=r0):
     # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
     text_mult = 1.1
-    text_size = ssmol * 0.6
+    text_size = ticksize * 0.6
 
     ms = range(0, 5)
     for m in ms:

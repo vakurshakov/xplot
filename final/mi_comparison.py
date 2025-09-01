@@ -10,9 +10,9 @@ nrows=3
 fig = plt.figure(figsize=(8 * ncols * 1.15, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-set_big(42)
-set_smol(40)
-set_ssmol(36)
+set_titlesize(42)
+set_labelsize(40)
+set_ticksize(36)
 
 def draw_current_lines():
     ax = j_l.axes_position
@@ -23,13 +23,13 @@ def draw_current_lines():
     text_offset = 0.05
     ax.arrow(x0, y0, +rho_i/2, 0, **arg_arrow)
     ax.arrow(x0, y0, -rho_i/2, 0, **arg_arrow)
-    ax.text(x0, y0 + text_offset, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ssmol)
+    ax.text(x0, y0 + text_offset, "$32\,\\rho_e$", horizontalalignment="center", fontsize=ticksize)
 
     x0 = 70
     y0 = 0.04
     ax.arrow(x0, y0, +1 * rho_i, 0, **arg_arrow)
     ax.arrow(x0, y0, -1 * rho_i, 0, **arg_arrow)
-    ax.text(x0, y0 + text_offset, "$2\,\\rho_i$", horizontalalignment="center", fontsize=ssmol)
+    ax.text(x0, y0 + text_offset, "$2\,\\rho_i$", horizontalalignment="center", fontsize=ticksize)
 
     xlim = (40, -1)
     ax.fill_between(rc[xlim[0]:xlim[1]], np.zeros_like(j)[xlim[0]:xlim[1]], j[xlim[0]:xlim[1]], color="grey", alpha=0.2, zorder=-1)
@@ -141,17 +141,17 @@ for ax, letter in zip([*fig.axes[:3], *fig.axes[4:7], *fig.axes[8:]], "abcdefghi
     annotate_x(ax, "${\\rm " + letter + "}$", 0.92, 0.06)
 
 for ax, text in zip([fig.axes[0], fig.axes[4]], ["$m_i = 1,~\\rho_i = \\rho_e$", "$m_i = 100,~\\rho_i \\approx 32 \\rho_e$"]):
-    annotate_x(ax, text, 0.06, 0.9, ssmol, "left")
+    annotate_x(ax, text, 0.06, 0.9, ticksize, "left")
 
 draw_current_lines()
 draw_magnetic_lines()
 
-b_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
-p_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
-j_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ssmol, framealpha=1)
+b_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ticksize, framealpha=1)
+p_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ticksize, framealpha=1)
+j_l.axes_position.legend(bbox_to_anchor=(0.47, 0.4), fontsize=ticksize, framealpha=1)
 
 fig.tight_layout()
 fig.tight_layout()
 
-# p_l.axes_position.legend(fontsize=ssmol, loc="upper right")
+# p_l.axes_position.legend(fontsize=ticksize, loc="upper right")
 fig.savefig(f"{res_dir}/figure2.pdf")

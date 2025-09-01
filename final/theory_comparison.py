@@ -8,9 +8,9 @@ nrows=1
 fig = plt.figure(figsize=(8 * ncols * 1.18, 8 * nrows * 1.1))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=[1] * nrows, figure=fig)
 
-set_big(42)
-set_smol(40)
-set_ssmol(36)
+set_titlesize(42)
+set_labelsize(40)
+set_ticksize(36)
 
 
 arg_tc = {
@@ -78,9 +78,9 @@ for diag in [b_t, n_t, T_t]:
 for ax, letter in zip(fig.axes, "abc"):
     annotate_x(ax, "${\\rm " + letter + "}$", 0.08, 0.88)
 
-b_t.axes_position.legend(loc="upper right", fontsize=ssmol * 1.1)
-T_t.axes_position.legend(loc="upper right", fontsize=ssmol * 1.1)
-n_t.axes_position.legend(loc="lower right", fontsize=ssmol * 1.1)
+b_t.axes_position.legend(loc="upper right", fontsize=ticksize * 1.1)
+T_t.axes_position.legend(loc="upper right", fontsize=ticksize * 1.1)
+n_t.axes_position.legend(loc="lower right", fontsize=ticksize * 1.1)
 
 fig.tight_layout()
 fig.tight_layout()
