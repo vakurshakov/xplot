@@ -13,10 +13,10 @@ def plot_baligned_electric_potential(t):
 
     xc = data_shape["Y"][0] // 2
     xl = xc + 25
-    w1 = -24
+    w1 = -2
     w2 = +2
-    xs1 = select_magnetic_line(xl + w1)
-    xs2 = select_magnetic_line(xl + w2)
+    xs1 = select_magnetic_line(bz, xl + w1)
+    xs2 = select_magnetic_line(bz, xl + w2)
     zs = np.arange(0, data_shape["Y"][1])
 
     e_l = np.zeros(data_shape["Y"][1])
@@ -44,7 +44,7 @@ def plot_baligned_electric_potential(t):
     annotate_x(ep.axes_position, "$t / \\tau = {" f"{t * dts / tau:.3f}" "}$", y=1.2)
 
     fig.tight_layout()
-    fig.savefig(f"{res_dir}/baligned_epotential_{str(t // offset).zfill(4)}.png")
+    fig.savefig(f"{res_dir}/{str(t // offset).zfill(4)}.png")
 
     for diag in [ep, phi]:
         diag.clear()
@@ -62,27 +62,6 @@ def update_data(t):
     ep.data = agg(ep.data, np.divide(dot, b, where=(b > 1e-3), out=np.zeros_like(b)))
 
 
-def select_magnetic_line(xl):
-    xs = data_shape["Y"][0]
-    zs = data_shape["Y"][1]
-    xc = xs // 2
-    zc = zs // 2
-
-    # 2 * np.pi can be removed since comparison is relative
-    b_f0 = np.sum(bz[zc,xc:xl] * np.arange(0, xl - xc))
-
-    xmap = np.zeros(zs, dtype=np.int32)
-    for z in np.arange(0, zs):
-        b_fz = 0
-        for x in np.arange(xc, xs):
-            b_fz += bz[z, x] * (x - xc)
-            xmap[z] = x
-
-            if (b_fz >= b_f0):
-                break
-    return xmap
-
-
 if __name__ == "__main__":
     ncols=2
     nrows=1
@@ -91,7 +70,7 @@ if __name__ == "__main__":
     gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1, 2], height_ratios=[1] * nrows, figure=fig)
 
     ep = electric_field("Y", subplot(fig, gs, 0, 0), "$E_{\\|}$")
-    ep.vmin_vmax = (-0.6e-3, +0.6e-3)
+    ep.vmin_vmax = (-2e-3, +2e-3)
 
     phi = electric_field("Y")
     phi.axes_position = subplot(fig, gs, 1, 0)
@@ -102,9 +81,13 @@ if __name__ == "__main__":
     bz = get_parsed_field(b, "B", "Y", "z", 0)
     b = np.hypot(br, bz)
 
-    res_dir = f"{params_path}/Other"
+    res_dir = f"{params_path}/B-Aligned_electric_potential"
     mkdir(res_dir)
 
-    offset = 100
+    offset = 10
     t0 = 25 * offset
+    t_range = create_t_range(t0, int(time / dts), offset)
+
+    # for t in t_range[::-1]:
     plot_baligned_electric_potential(t0)
+
