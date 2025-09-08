@@ -40,7 +40,7 @@ def curvilinear(title, i, v):
 phi = curvilinear("$\\varphi(\\xi, z)$", (1, 0), (-3, 3))
 vpc = curvilinear("$v_{\\|}^i(\\xi, z) / c_s$", (1, 1), vmap)
 
-def linear(title, i, v):
+def linear(title, i, v, nv):
     f = electric_field("Y")
     f.axes_position = subplot(fig, gs, *i)
     f.axes_args["title"] = title
@@ -48,11 +48,11 @@ def linear(title, i, v):
     f.axes_args["xlim"] = (by, ey)
     f.axes_args["xticks"] = np.linspace(by, ey, 5)
     f.axes_args["ylim"] = v
-    f.axes_args["yticks"] = np.linspace(*v, 5)
+    f.axes_args["yticks"] = np.linspace(*v, nv)
     return f
 
-phil = linear("$\\varphi(z)$",        (2, 0), (0, 4))
-vpcl = linear("$v_{\\|}^i(z) / c_s$", (2, 1), vmap)
+phil = linear("$\\varphi(z)$",        (2, 0), (0, 4), 5)
+vpcl = linear("$v_{\\|}^i(z) / c_s$", (2, 1), vmap,   7)
 
 b = magnetic_field("Y")
 br = get_parsed_field(b, "B", "Y", "x", 0)
@@ -81,7 +81,6 @@ cs = np.sqrt(T_e / mi_me)
 
 ep.data /= OFF
 vp.data /= OFF * cs
-
 
 xc = data_shape["Y"][0] // 2
 zs = np.arange(0, data_shape["Y"][1])
@@ -137,17 +136,30 @@ for d in [ ep, vp, phi, vpc ]:
     d.draw(add_cbar=True)
     d.draw_info()
 
-def draw_phi_r(p, data):
+z_th = []
+phil_th = []
+vpcl_th = []
+
+with open(f"{params_path}/Final/V_and_Fi.dat") as f:
+    for l in f.readlines():
+        v = l.split("\t")
+        z_th.append(float(v[0]) * dz)
+        phil_th.append(float(v[2]))
+        vpcl_th.append(float(v[1]))
+
+def draw_linear(p, df, d_th):
     ax = p.axes_position
-    ax.plot(zs * dz, (data[0] + data[1]) / 2, linewidth=3)
-    # ax.grid(alpha=0.6)
+    dmin = df(xl_min)
+    dmax = df(xl_max)
+    ax.plot(zs * dz, (dmin[0] + dmin[1]) / 2, label="$|\\xi| = 0$",  linewidth=3)
+    ax.plot(zs * dz, (dmax[0] + dmax[1]) / 2, label="$|\\xi| = 12$", linewidth=3)
+    ax.plot(z_th,    d_th,                    label="theory",        linewidth=3)
+    ax.grid(alpha=0.6)
+    ax.legend(loc="upper left", fontsize=ssmol*0.8)
     p.draw_info()
 
-draw_phi_r(phil, calc_phi(xl_min))
-draw_phi_r(phil, calc_phi(xl_max))
-
-draw_phi_r(vpcl, calc_vpc(xl_min))
-draw_phi_r(vpcl, calc_vpc(xl_max))
+draw_linear(phil, calc_phi, phil_th)
+draw_linear(vpcl, calc_vpc, vpcl_th)
 
 zmin = (zs * dz)[0]
 zmax = (zs * dz)[-1]
