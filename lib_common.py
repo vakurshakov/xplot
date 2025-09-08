@@ -19,11 +19,8 @@ proc = comm.Get_size()
 from lib_plot import *
 from lib_xy_rphi import *
 
-# from nx_140_np_200.parameters import *
-# from nx_140_np_1000.parameters import *
-# from nx_140_np_1000_glinskiy.parameters import *
-# from t11_np_1000.parameters import *
-from ConductiveWall_R35.parameters import *
+from t11_np_1000.parameters import *
+# from ConductiveWall_R35.parameters import *
 
 # Data layout in fields files
 fields = [ "x", "y", "z" ]
