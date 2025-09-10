@@ -30,6 +30,6 @@ def process_collection(named_arrays, parse, output, shape=None):
         if (shape != None): arr = np.reshape(arr, shape)
 
         filename = output(name)
-        print(f"Saving {filename}.png")
+        print(f"Saving {filename}.npy")
 
         np.save(filename, arr)
