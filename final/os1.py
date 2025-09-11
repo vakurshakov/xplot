@@ -5,8 +5,8 @@ from final import *
 ncols=4
 nrows=2
 
-fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1.2))
-gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1]*ncols, height_ratios=[1]*nrows, figure=fig)
+fig = plt.figure(figsize=(8 * ncols * 1.1, 8 * nrows * 1.1))
+gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1]*ncols, height_ratios=[1.3, 1], figure=fig)
 
 nmap = (0, 3.0)
 bmap = (0, 0.2)
@@ -40,6 +40,8 @@ jizy.data = get_parsed_field(jizy, "E", "Y", "z", TIME)
 jipz.data = get_parsed_field(jipz, "E", "Z", "y", TIME)[1]
 
 for diag in [niy, niz, jepy, jepz, jizy]:
+    if (diag == niz or diag == jepz):
+        diag.axes_position.set_aspect(1)
     diag.draw(add_cbar=True)
     diag.draw_info()
 
