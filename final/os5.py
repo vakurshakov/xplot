@@ -39,7 +39,7 @@ print("b =", popt[1])
 print("c =", popt[2])
 
 V = np.sqrt(T_i / mi_me)
-L = 80
+L = 80 / 2
 Gamma = (popt[1] / tau) * (L / V)
 
 ax.plot(ts, rs, label="$r^* = {\\rm argmax}(n_i)$")
