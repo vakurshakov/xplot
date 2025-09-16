@@ -144,7 +144,7 @@ with open(f"{params_path}/Final/V_and_Fi.dat") as f:
     for l in f.readlines():
         v = l.split("\t")
         z_th.append(float(v[0]) * dz)
-        phil_th.append(float(v[2]))
+        phil_th.append(float(v[2]) / 2)
         vpcl_th.append(float(v[1]))
 
 def draw_linear(p, df, d_th):
