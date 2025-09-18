@@ -2,8 +2,8 @@
 
 from collect import *
 
-r0    = int(8 / dx)   # dx units
-rmax  = int(16 / dx)  # dx units
+r0    = int(10 / dx)  # dx units
+rmax  = int(15 / dx)  # dx units
 rstep = 5             # dimensionless
 
 rmap = []
@@ -12,16 +12,20 @@ for r, map in enumerate(R_MAP):
         rmap.append((r*dx, map))
 
 def parse(t, map):
-    b = get_parsed_field(get_fields_path("Z"), "B", "Z", "z", t)
-    er, ea = get_parsed_field(get_fields_path("Z"), "E", "Z", "", t)
-    jri, jai = get_parsed_field(get_particles_path("Ions", "Current", "Z"), "E", "Z", "", t)
-    jre, jae = get_parsed_field(get_particles_path("Electrons", "Current", "Z"), "E", "Z", "", t)
-    return b[map], er[map], ea[map], jri[map], jai[map], jre[map], jae[map]
+    b = get_parsed_field(magnetic_field("Z"), "B", "Z", "z", t)
+    er, ea = get_parsed_field(electric_field("Z"), "E", "Z", "", t)
+    ni = get_parsed_scalar(particles_field("Ions", "Density", "Z"), t)
+    ne = get_parsed_scalar(particles_field("Electrons", "Density", "Z"), t)
+    jri, jai = get_parsed_field(particles_field("Ions", "Current", "Z"), "E", "Z", "", t)
+    jre, jae = get_parsed_field(particles_field("Electrons", "Current", "Z"), "E", "Z", "", t)
+    return b[map], er[map], ea[map], ni[map], ne[map], jri[map], jai[map], jre[map], jae[map]
 
 named_arrays = [
     ["b", []],
     ["er", []],
     ["ea", []],
+    ["ni", []],
+    ["ne", []],
     ["jri", []],
     ["jai", []],
     ["jre", []],

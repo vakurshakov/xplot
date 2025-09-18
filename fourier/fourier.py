@@ -4,17 +4,19 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from lib_common import *
 
 named_props = [
-    ["b",   ("\\delta B_z", 0.02,  150)],
-    ["er",  ("E_r",         0.02,  40 )],
-    ["ea",  ("E_{\\phi}",   0.02,  40 )],
-    ["jri", ("J_r^i",       0.002, 5  )],
-    ["jai", ("J_{\\phi}^i", 0.002, 5  )],
-    ["jre", ("J_r^e",       0.02,  100)],
-    ["jae", ("J_{\\phi}^e", 0.02,  100)],
+    ["b",   ("\\delta B_z", 0.02,  150, False)],
+    ["er",  ("E_r",         0.02,  40 , False)],
+    ["ea",  ("E_{\\phi}",   0.02,  40 , False)],
+    ["ni",  ("\\delta n_i", 1.0,   1200, True)],
+    ["ne",  ("\\delta n_e", 1.0,   1200, True)],
+    ["jri", ("J_r^i",       0.002, 5  , False)],
+    ["jai", ("J_{\\phi}^i", 0.002, 5  , False)],
+    ["jre", ("J_r^e",       0.02,  100, False)],
+    ["jae", ("J_{\\phi}^e", 0.02,  100, False)],
 ]
 
 r0    = 10
-rmax  = 15
+rmax  = 12.5
 rstep = 2.5
 r_range = reduce_array(np.arange(r0, rmax + rstep, rstep))
 
@@ -24,7 +26,7 @@ d_tmax = int(3 * tau / dts)
 f_tmin = d_tmin * dts / tau
 f_tmax = d_tmax * dts / tau
 
-mmax = 50
+mmax = 6
 wmax = 0.02
 
 args_phit = {
@@ -45,7 +47,7 @@ args_mw = {
 
     "xlabel": "$m,~{\\rm units}$",
     "xlim": (-mmax, +mmax),
-    "xticks": np.linspace(-mmax, +mmax, 5),
+    "xticks": np.linspace(-mmax, +mmax, 7),
 }
 
 Omega_i = B0 / mi_me
@@ -75,7 +77,7 @@ def draw_common_lines_mw(ax, r=r0):
     # ax.plot(ms, (ms / r) * np.sqrt(T_i / mi_me), linestyle='--', c='r', linewidth=0.8, alpha=1)
 
 
-def prepare_field_phit(ax, name, title, r, max_phit):
+def prepare_field_phit(ax, name, title, r, max_phit, params_path=params_path):
     F_at = Field(f"{params_path}/Collection/{name}_phit_r={r:.2f}", ax, (0.0, 2 * np.pi, f_tmin, f_tmax), signed_cmap, (-max_phit, +max_phit))
     F_at.set_axes_args(title=title, **args_phit)
 
@@ -84,8 +86,10 @@ def prepare_field_phit(ax, name, title, r, max_phit):
     assert ((d_tmax - d_tmin) < F_at.data.shape[0]), f"Incorrect fourier window is chosen: d_tmin {d_tmin}, d_tmax {d_tmax}, F_at.data.shape {F_at.data.shape[0]}"
     F_at.data = F_at.data[(d_tmin - data_tmin):(d_tmax - data_tmin),:]
 
-    if ("B_z" in F_at.axes_args["title"]):
+    if (name == "b"):
         F_at.data -= F_at.data[0,:]
+    if (name == "ni" or name == "ne"):
+        F_at.data[:,:] -= np.mean(F_at.data, axis=1)[:,None]
 
     return F_at
 

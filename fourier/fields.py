@@ -11,7 +11,10 @@ gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1] * ncols, height_ratios=
 res_dir = f"{params_path}/Spectra"
 mkdir(res_dir)
 
-for name, (title, max_at, max_mw) in named_props:
+for name, (title, max_at, max_mw, update) in named_props:
+    if not update:
+        continue
+
     for r in r_range:
         F_at = prepare_field_phit(subplot(fig, gs, 0, 0), name, f"${title}(\\phi, t, r = {r:.2f})$", r, max_at)
         F_at.draw(add_cbar=True)
