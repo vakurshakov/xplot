@@ -44,7 +44,7 @@ COS, SIN, R_MAP = init_COS_SIN_RMAP((0, data_shape['Z'][0], 0, data_shape['Z'][1
 
 def mkdir(dirname):
     if not os.path.exists(dirname) and rank == 0:
-        os.mkdir(dirname)
+        os.makedirs(dirname, exist_ok=True)
 
 mkdir(f"{params_path}/Video")
 
