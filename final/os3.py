@@ -86,8 +86,8 @@ dpzz = np.gradient(pz, dz)
 dpbz = dp * np.gradient(np.log(bz, where=(np.abs(bz) > 1e-3), out=np.zeros_like(bz)), dz)
 
 ax = forces.axes_position
-ax.plot(avg1(zs), -dpzz, label="$-\\partial_z P_{zz}$",                 linewidth=3)
-ax.plot(avg1(zs), +dpbz, label="$(P_{rr} - P_{zz})~\\partial_z ln(B)$", linewidth=3)
+ax.plot(avg1(zs), -dpzz, label="$-\\partial_z \\Pi_{zz}$",                 linewidth=3)
+ax.plot(avg1(zs), +dpbz, label="$(\\Pi_{rr} - \\Pi_{zz})~\\partial_z ln(B)$", linewidth=3)
 
 d1b = np.gradient(bzy.data, dz)
 d2b = np.gradient(d1b, dz)
