@@ -28,8 +28,7 @@ for d in ${diagnostics[*]}; do
     #     i=$((i + 1))
     # done
 
-    # TODO: Investigate size and quality optimizations for a large image-plots!
-    ffmpeg -y -i ./%04d.png -r 15 ../Video/$d.mp4
+    ffmpeg -y -i ./%04d.png -c:v libx265 -r 15 -crf 40 -c:a aac -preset slow -threads 8 ../Video/$d.mp4
 
     popd
 done
