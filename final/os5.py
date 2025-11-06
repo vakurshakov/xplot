@@ -45,7 +45,7 @@ Gamma = (popt[1] / tau) * (L / V)
 ax.plot(ts, rs, label="$r^* = {\\rm argmax}(n_i)$")
 ax.plot(ts, exponent(ts, *popt), linestyle="--", label=f"$\\Gamma \\approx {Gamma:.2f} \\, v_{{Ti}} / L$")
 
-ax.legend(framealpha=1, loc="upper left", fontsize=14)#, draggable=True)
+ax.legend(framealpha=1, loc="upper left", fontsize=14)
 ax.grid(alpha=0.6)
 
 # plt.show()

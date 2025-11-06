@@ -11,7 +11,7 @@ gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1]*ncols, height_ratios=[1
 ax = subplot(fig, gs, 0, 0)
 
 compare_models = [
-    ("Damping", "../t11_np_1000"),
+    ("Damping", "../T11_MergeV"),
     ("Conductive, circle", "../ConductiveWall_FixRotor/Circle"),
     ("Conductive, square", "../ConductiveWall_FixRotor/Square"),
 ]
@@ -24,7 +24,7 @@ for (label, path) in compare_models:
     def mean(d):
         wc=len(w)//2
         ww=3
-        return np.mean(d[wc-ww:wc+ww,:], axis=0)
+        return d[-1, :] # np.mean(d[wc-ww:wc+ww,:], axis=0)
 
     ax.plot(m, mean(F_mw.data), label=label, linewidth=2)
 
@@ -39,8 +39,8 @@ F_mw.axes_args["xlabel"] = "$m,~{\\rm units}$"
 F_mw.axes_args["xlim"] = (-mmax, +mmax)
 F_mw.axes_args["xticks"] = np.linspace(-mmax, +mmax, 9)
 F_mw.axes_args.pop("ylabel")
-F_mw.axes_args["ylim"] = (0, ymax)
-F_mw.axes_args["yticks"] = np.linspace(0, ymax, 6)
+F_mw.axes_args.pop("ylim") # (0, ymax)
+F_mw.axes_args.pop("yticks") # np.linspace(0, ymax, 6)
 F_mw.draw_info()
 
 ax.legend(fontsize=ssmol * 0.64, loc="lower left", framealpha=1.0)
