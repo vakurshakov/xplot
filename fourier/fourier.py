@@ -22,7 +22,7 @@ r_range = reduce_array(np.arange(r0, rmax + rstep, rstep))
 
 data_tmin = int(0 * tau / dts)
 d_tmin = int(0 * tau / dts)
-d_tmax = int(3 * tau / dts)
+d_tmax = int(9 * tau / dts)
 f_tmin = d_tmin * dts / tau
 f_tmax = d_tmax * dts / tau
 
@@ -53,7 +53,7 @@ args_mw = {
 Omega_i = B0 / mi_me
 Omega_e = B0
 omega0_pi = 1 / np.sqrt(mi_me)
-print("Omega_i:", Omega_i, "[w_pe]", "Omega_e:", Omega_e, "[w_pe]", "omega0_pi:", omega0_pi, "[w_pe]")
+# print("Omega_i:", Omega_i, "[w_pe]", "Omega_e:", Omega_e, "[w_pe]", "omega0_pi:", omega0_pi, "[w_pe]")
 
 def draw_common_lines_mw(ax, r=r0):
     # we're drawing spectrum in untits of (omega_pi / c, omega_pe)
