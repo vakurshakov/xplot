@@ -2,6 +2,10 @@
 
 from final import *
 
+set_big(big*1.1)
+set_smol(smol*1.1)
+set_ssmol(ssmol*1.1)
+
 ncols=4
 nrows=2
 
@@ -24,9 +28,9 @@ jpzl = particles_field("", "", "Z", subplot(fig, gs, 2, 1), "")
 nizl = particles_field("", "", "Z", subplot(fig, gs, 3, 0), "")
 bzzl = magnetic_field(         "Z", subplot(fig, gs, 3, 1), "")
 
-jpzl.axes_args["title"] = "Current density"
-nizl.axes_args["title"] = "Ion density"
-bzzl.axes_args["title"] = "Magnetic field, $B_z$"
+jpzl.axes_args["title"] = "\\rm Current density"
+nizl.axes_args["title"] = "\\rm Ion density"
+bzzl.axes_args["title"] = "\\rm Magnetic field, $B_z$"
 
 TAU = 4
 TIME = int(TAU * tau / dts)
@@ -53,7 +57,7 @@ jipl = phi_averaged(jipz.data, R_MAP)
 ax.plot(rs, jepl,        label="$J_{\\phi}^e$",               linewidth=3)
 ax.plot(rs, jipl,        label="$J_{\\phi}^i$",               linewidth=3)
 ax.plot(rs, jepl + jipl, label="$J_{\\phi}^e + J_{\\phi}^i$", linewidth=3)
-ax.legend(fontsize=smol)
+ax.legend(loc="upper right", fontsize=smol * 0.9)
 
 for n in np.arange(0, TAU+1):
     t = int(n * tau / dts) 
@@ -74,6 +78,22 @@ def info(map):
 jpzl.draw_info(**info((jmap)))
 nizl.draw_info(**info(nmap))
 bzzl.draw_info(**info(bmap))
+
+dlmap = [
+    (niy, "a"),
+    (niz, "b"),
+    (jepy, "c"),
+    (jepz, "d"),
+    (jizy, "e"),
+    (jpzl, "f"),
+    (nizl, "g"),
+    (bzzl, "h"),
+]
+
+for (d, l) in dlmap:
+    y = 1.1
+    if l in "bdfh": y=1.15
+    annotate_x(d.axes_position, f"\\rm {l}", -0.1, y)
 
 fig.tight_layout()
 fig.savefig(f"{res_dir}/os1.pdf")

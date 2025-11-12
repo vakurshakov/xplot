@@ -88,17 +88,25 @@ else:
     smol = 28
     ssmol = 24
 
+class Fonts:
+    big = 30
+    smol = 28
+    ssmol = 24
+
 def set_big(new_big):
     global big
     big = new_big
+    Fonts.big = new_big
 
 def set_smol(new_smol):
     global smol
     smol = new_smol
+    Fonts.smol = new_smol
 
 def set_ssmol(new_ssmol):
     global ssmol
     ssmol = new_ssmol
+    Fonts.ssmol = new_ssmol
 
 def subplot(fig, gs, x=0, y=0):
     return fig.add_subplot(gs[x + y * gs.ncols])
@@ -294,11 +302,11 @@ class Field:
             elif name == "zlim":
                 ax.set_zlim(arg)
             elif name == "xlabel":
-                ax.set_xlabel(arg, fontsize=smol, labelpad=12)
+                ax.set_xlabel(arg, fontsize=smol) #, labelpad=12)
             elif name == "ylabel":
-                ax.set_ylabel(arg, fontsize=smol, labelpad=10)
+                ax.set_ylabel(arg, fontsize=smol) #, labelpad=10)
             elif name == "zlabel":
-                ax.set_zlabel(arg, fontsize=smol, labelpad=16)
+                ax.set_zlabel(arg, fontsize=smol) #, labelpad=16)
             elif name == "xticks":
                 ax.set_xticks(arg)
             elif name == "yticks":

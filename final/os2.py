@@ -2,6 +2,10 @@
 
 from final import *
 
+set_big(big*0.9)
+set_smol(smol*0.9)
+set_ssmol(ssmol*0.9)
+
 ncols=3
 nrows=2
 
@@ -153,7 +157,7 @@ def draw_linear(p, df, d_th):
     dmax = df(xl_max)
     ax.plot(zs * dz, (dmin[0] + dmin[1]) / 2, label="$|\\xi| = 0$",  linewidth=3)
     ax.plot(zs * dz, (dmax[0] + dmax[1]) / 2, label="$|\\xi| = 12$", linewidth=3)
-    ax.plot(z_th,    d_th,                    label="theory",        linewidth=3)
+    ax.plot(z_th,    d_th,                    label="\\rm theory",   linewidth=3)
     ax.grid(alpha=0.6)
     ax.legend(loc="upper left", fontsize=ssmol*0.8)
     p.draw_info()
@@ -183,6 +187,18 @@ def line(xl, c, w):
 line(xl_min, "C0", w2)
 line(xl_max, "C1", w1)
 line(xl_max, "C1", w2)
+
+dlmap = [
+    (ep,   "a"),
+    (phi,  "b"),
+    (phil, "c"),
+    (vp,   "d"),
+    (vpc,  "e"),
+    (vpcl, "f"),
+]
+
+for (d, l) in dlmap:
+    annotate_x(d.axes_position, f"\\rm {l}", -0.1, 1.1, size=Fonts.big)
 
 fig.tight_layout()
 fig.savefig(f"{res_dir}/os2.pdf")

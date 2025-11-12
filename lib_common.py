@@ -19,8 +19,9 @@ proc = comm.Get_size()
 from lib_plot import *
 from lib_xy_rphi import *
 
-from t11_np_1000.parameters import *
-# from ConductiveWall_R35.parameters import *
+from T11_MergeV.parameters import *
+# from ConductiveWall_FixRotor.parameters_circle import *
+# from ConductiveWall_FixRotor.parameters_square import *
 
 # Data layout in fields files
 fields = [ "x", "y", "z" ]
@@ -217,8 +218,8 @@ def get_parsed_field(field, name, plane, comp, t, prefix=None):
         return data
     return parse_file(file, fields.index(comp))
 
-def get_parsed_scalar(field, t):
-    return parse_file(f"{get_prefix(t)}/{field.path_to_file}_{str(t).zfill(4)}")
+def get_parsed_scalar(field, t, prefix=None):
+    return parse_file(get_parsed_file(t, field.path_to_file, prefix))
 
 def generate_info(diag, plane, title):
     axes_args = {

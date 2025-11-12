@@ -3,16 +3,16 @@
 from final import *
 from xplot.fourier.fourier import *
 
-set_big(13)
-set_smol(11)
-set_ssmol(11)
+set_big(15)
+set_smol(14)
+set_ssmol(14)
 
 plt.rc('text', usetex=True)
-plt.rc('axes', titlesize=13, labelsize=13)
-plt.rc('xtick', labelsize=11)
-plt.rc('ytick', labelsize=11)
-plt.rc('legend', fontsize=11.5)
-plt.rc('figure', titlesize=13)
+plt.rc('axes', titlesize=15, labelsize=15)
+plt.rc('xtick', labelsize=14)
+plt.rc('ytick', labelsize=14)
+plt.rc('legend', fontsize=12)
+plt.rc('figure', titlesize=15)
 plt.rc('lines', linewidth=1.3)
 
 ncols=1
@@ -22,9 +22,9 @@ fig = plt.figure(figsize=(6.0, 4.0))
 gs = GridSpec(ncols=ncols, nrows=nrows, width_ratios=[1]*ncols, height_ratios=[1]*nrows, figure=fig)
 
 compare_models = [
-    ("Damping, circle", "../T11_MergeV"),
-    # ("Conductive, circle", "../ConductiveWall_FixRotor/Circle"),
-    # ("Conductive, square", "../ConductiveWall_FixRotor/Square"),
+    ("\\rm Damping, circle", "../T11_MergeV"),
+    # ("\\rm Conductive, circle", "../ConductiveWall_FixRotor/Circle"),
+    # ("\\rm Conductive, square", "../ConductiveWall_FixRotor/Square"),
 ]
 
 TIME = d_tmax

@@ -2,6 +2,10 @@
 
 from final import *
 
+set_big(big*1.08)
+set_smol(smol*1.08)
+set_ssmol(ssmol*1.08)
+
 ncols=3
 nrows=1
 
@@ -23,9 +27,9 @@ forces     = Field("", subplot(fig, gs, 0, 0))
 pressure_i = Field("", subplot(fig, gs, 1, 0))
 pressure_e = Field("", subplot(fig, gs, 2, 0))
 
-forces.set_axes_args(title="Longitudinal forces",            xlim=(0, 200), xticks=np.linspace(0, 200, 6), ylim=fmap, yticks=np.linspace(*fmap, 5))
-pressure_i.set_axes_args(title="Radial pressure, ions",      xlim=(0, 30),  xticks=np.linspace(0, 30, 6),  ylim=pmap, yticks=np.linspace(0, pmap[1], 5))
-pressure_e.set_axes_args(title="Radial pressure, electrons", xlim=(0, 30),  xticks=np.linspace(0, 30, 6),  ylim=pmap, yticks=np.linspace(0, pmap[1], 5))
+forces.set_axes_args(title="\\rm Longitudinal forces",            xlim=(0, 200), xticks=np.linspace(0, 200, 6), ylim=fmap, yticks=np.linspace(*fmap, 5))
+pressure_i.set_axes_args(title="\\rm Radial pressure, ions",      xlim=(0, 30),  xticks=np.linspace(0, 30, 6),  ylim=pmap, yticks=np.linspace(0, pmap[1], 5))
+pressure_e.set_axes_args(title="\\rm Radial pressure, electrons", xlim=(0, 30),  xticks=np.linspace(0, 30, 6),  ylim=pmap, yticks=np.linspace(0, pmap[1], 5))
 
 def create_particles_fields(s):
     return \
@@ -118,21 +122,30 @@ def draw_pressure(d, nz, jaz, prz, paz, pzz):
     ax.plot(rs, dprz,                label="$\\Delta \\Pi_{R}$",                   linewidth=3, color="C2")
     ax.plot(rs, pe * es,             label="$\\int_{\\infty}^r n E_r dr$",         linewidth=3, color="C3")
     ax.plot(rs, pb,                  label="$\\int_{\\infty}^r J_{\\phi} B_z dr$", linewidth=3, color="C4")
-    ax.plot(rs, -dpra -dprz +pb +pe, label="control",                              linewidth=4, linestyle="--", color="red")
+    ax.plot(rs, -dpra -dprz +pb +pe, label="\\rm control",                         linewidth=4, linestyle="--", color="red")
 
 draw_pressure(pressure_i, nz_i, jaz_i, prz_i, paz_i, pzz_i)
 draw_pressure(pressure_e, nz_e, jaz_e, prz_e, paz_e, pzz_e)
 
 def get_loc(d):
     if d == forces:
-        return dict(bbox_to_anchor=(0.48, 0.25))
+        return dict(bbox_to_anchor=(0.46, 0.26))
     return dict(loc="upper right")
 
 for d in [ forces, pressure_i, pressure_e ]:
     d.draw_info()
     ax = d.axes_position
-    ax.legend(fontsize=smol*0.9, framealpha=1, **get_loc(d)) #, loc=get_loc(d))
+    ax.legend(fontsize=Fonts.smol*0.85, framealpha=1, **get_loc(d)) #, loc=get_loc(d))
     ax.grid(alpha=0.6)
+   
+dlmap = [
+    (forces, "a"),
+    (pressure_i, "b"),
+    (pressure_e, "c"),
+]
+
+for (d, l) in dlmap:
+    annotate_x(d.axes_position, f"\\rm {l}", -0.1, 1.1, size=Fonts.big)
 
 fig.tight_layout(w_pad=-1)
 fig.savefig(f"{res_dir}/os3.pdf")

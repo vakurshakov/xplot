@@ -84,13 +84,8 @@ for i, tt in enumerate(TAU):
         fig.text(0.76, 0.98, "\\rm Square conductive wall", size=Fonts.big, ha="center", bbox=bbox)
 
     for j in (i, i + 3):
-
-        # if i == 0:
         bz[j].axes_args["title"] = "$B_z(x, \\, y)$"
         ns[j].axes_args["title"] = "$n_i(x, \\, y)$"
-        # else:
-        #     bz[j].axes_args.pop("title")
-        #     ns[j].axes_args.pop("title")
 
         if i < 2:
             bz[j].axes_args.pop("xlabel")
@@ -187,4 +182,4 @@ for j, (label, path) in enumerate(compare_models):
 fig.text(0.44, 0.30, f"$\\delta n_i(t, m, r = {R:.1f})$", size=Fonts.big, ha="center", bbox=bbox)
 
 fig.tight_layout(h_pad=0.1, w_pad=0.1, rect=(0, 0, 1, 0.99))
-fig.savefig(f"{res_dir}/os4a.pdf")
+fig.savefig(f"{res_dir}/os8.pdf")

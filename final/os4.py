@@ -2,6 +2,10 @@
 
 from final import *
 
+set_big(big*1.1)
+set_smol(smol*1.1)
+set_ssmol(ssmol*1.1)
+
 ncols=4
 nrows=2
 
@@ -46,8 +50,8 @@ def update_args(d, title, map):
         yticks=np.linspace(*map, 5),
     )
 
-update_args(bzl, "Magnetic field, $B_z(y)$", bzmap)
-update_args(bpl, "Plasma beta, $\\beta(y)$", bpmap)
+update_args(bzl, "\\rm Magnetic field, $B_z(y)$", bzmap)
+update_args(bpl, "\\rm Plasma beta, $\\beta(y)$", bpmap)
 
 pr_i = particles_field("Ions", "Prr", "Z")
 pa_i = particles_field("Ions", "Ppp", "Z")
@@ -111,8 +115,24 @@ for d in [ bzl, bpl ]:
     d.draw_info()
     d.axes_position.grid(alpha=0.6)
 
-bzl.axes_position.legend(fontsize=ssmol, framealpha=1, loc="lower right")
-bpl.axes_position.legend(fontsize=ssmol, framealpha=1, bbox_to_anchor=(0.76,0.985))
+bzl.axes_position.legend(fontsize=Fonts.ssmol, framealpha=1, loc="lower right")
+bpl.axes_position.legend(fontsize=Fonts.ssmol, framealpha=1, bbox_to_anchor=(0.76,0.985))
+
+dlmap = [
+    (bz[0], "a"),
+    (bz[1], "b"),
+    (bz[2], "c"),
+
+    (ns[0], "d"),
+    (ns[1], "e"),
+    (ns[2], "f"),
+
+    (bzl, "g"),
+    (bpl, "h"),
+]
+
+for (d, l) in dlmap:
+    annotate_x(d.axes_position, f"\\rm {l}", -0.1, 1.15, size=Fonts.big)
 
 fig.tight_layout()
 fig.savefig(f"{res_dir}/os4.pdf")
