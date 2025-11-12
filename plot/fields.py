@@ -4,7 +4,7 @@ from plot import *
 
 def plot_fields3(t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
-    if not timestep_should_be_processed(t, filename, False):
+    if not timestep_should_be_processed(t, filename): # , False
         return
 
     def get_parsed_fields_xy(fr, fa, name):

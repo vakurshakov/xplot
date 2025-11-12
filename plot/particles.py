@@ -5,7 +5,7 @@ from plot import *
 
 def plot_particles3(s, t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
-    if not timestep_should_be_processed(t, filename, False):
+    if not timestep_should_be_processed(t, filename): # , False
         return
 
     jrs[0].data = get_parsed_field(jrs[0], "E", "X", "y", t)

@@ -4,7 +4,7 @@ from plot import *
 
 def plot_currents(t):
     filename = f"{res_dir}/{str(t // offset).zfill(4)}.png"
-    if not timestep_should_be_processed(t, filename, False):
+    if not timestep_should_be_processed(t, filename): # , False
         return
 
     ja_xi.data = get_parsed_field(ja_xi, "E", "X", "x", t)
