@@ -151,6 +151,8 @@ with open(f"{params_path}/Final/V_and_Fi.dat") as f:
         phil_th.append(float(v[2]) / 2)
         vpcl_th.append(float(v[1]))
 
+phil_th = np.asarray(phil_th) + 0.21
+
 def draw_linear(p, df, d_th):
     ax = p.axes_position
     dmin = df(xl_min)
