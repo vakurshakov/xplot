@@ -40,7 +40,7 @@ def prepare_field_m(ax, label, data):
         ylabel=f"$\\delta n_i(t, m, r = {R:.1f})$",
         xlabel="$t / \\tau$",
         xlim=(0, TIME * dts / tau),
-        xticks=np.linspace(0, TIME * dts / tau, 7),
+        xticks=np.linspace(0, TIME * dts / tau, 6),
     )
 
     ## Merge it back into `fourier_transform()` ##

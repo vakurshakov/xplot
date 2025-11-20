@@ -22,7 +22,7 @@ r_range = reduce_array(np.arange(r0, rmax + rstep, rstep))
 
 data_tmin = int(0 * tau / dts)
 d_tmin = int(0 * tau / dts)
-d_tmax = int(9 * tau / dts)
+d_tmax = int(10 * tau / dts)
 f_tmin = d_tmin * dts / tau
 f_tmax = d_tmax * dts / tau
 
