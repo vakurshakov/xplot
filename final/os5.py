@@ -38,7 +38,7 @@ L = 80 / 2
 Gamma = (popt[1] / tau) * (L / V)
 
 ax.plot(ts, rs, label="$r^* = {\\rm argmax}(n_i)$")
-ax.plot(ts, exponent(ts, *popt), linestyle="--", label=f"$\\Gamma \\approx {Gamma:.2f} \\, v_{{Ti}} / L$")
+ax.plot(ts, exponent(ts, *popt), linestyle="--", label=f"$\\Gamma \\approx {Gamma:.2f} \\, \\Gamma_{{fl}}$")
 
 ax.legend(framealpha=1, loc="upper left", fontsize=15)
 ax.grid(alpha=0.6)

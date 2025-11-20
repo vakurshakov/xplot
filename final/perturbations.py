@@ -82,9 +82,9 @@ for j, (label, path) in enumerate(compare_models):
     Gr = (Ga / tau) * (L / V)
 
     if j == 0:
-        ax.plot(tt, 0.60 * np.exp(Ga * tt), linestyle="--", color="C0", linewidth=1.5, label=f"$\\Gamma \\approx {Gr:.2f} \\, v_{{Ti}} / L$")
+        ax.plot(tt, 0.60 * np.exp(Ga * tt), linestyle="--", color="C0", linewidth=1.5, label=f"$\\Gamma \\approx {Gr:.2f} \\, \\Gamma_{{fl}}$")
         ax.set_title(label, pad=0, y=1.05)
-        ax.legend(bbox_to_anchor=(0.37, 0.55), framealpha=1.0) #
+        ax.legend(bbox_to_anchor=(0.327, 0.55), framealpha=1.0) #
 
     ax.set_ylim(1e-2, 1e+3)
     ax.grid(alpha=0.6)
